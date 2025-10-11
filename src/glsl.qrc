@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/">
+        <file>glsl/warp.f.glsl</file>
+        <file>glsl/warp.v.glsl</file>
+    </qresource>
+</RCC>

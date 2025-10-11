@@ -1,0 +1,46 @@
+QT = core gui quick
+
+CONFIG += c++20
+
+# You can make your code fail to compile if it uses deprecated APIs.
+# In order to do so, uncomment the following line.
+#DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
+
+SOURCES += \
+        Application.cpp \
+        Clock.cpp \
+        OpenGLBuffer.cpp \
+        OpenGLProgram.cpp \
+        OpenGLRenderer.cpp \
+        OpenGLShader.cpp \
+        OpenGLVertexArray.cpp \
+        PortalItem.cpp \
+        PortalRenderer.cpp \
+        QuickItem.cpp \
+        QuickRenderer.cpp \
+        WarpRenderer.cpp \
+        main.cpp
+
+# Default rules for deployment.
+qnx: target.path = /tmp/$${TARGET}/bin
+else: unix:!android: target.path = /opt/$${TARGET}/bin
+!isEmpty(target.path): INSTALLS += target
+
+HEADERS += \
+    Application.h \
+    Clock.h \
+    Latch.h \
+    OpenGLBuffer.h \
+    OpenGLProgram.h \
+    OpenGLRenderer.h \
+    OpenGLShader.h \
+    OpenGLVertexArray.h \
+    PortalItem.h \
+    PortalRenderer.h \
+    QuickItem.h \
+    QuickRenderer.h \
+    WarpRenderer.h
+
+RESOURCES += \
+    glsl.qrc \
+    qml.qrc
