@@ -2,13 +2,21 @@ import "Fermi"
 import QtQuick
 import QtQuick.Layouts
 
-Item {
+Page {
+    header: Pane {
+        Label {
+            anchors.centerIn: parent
+            text: qsTr("Settings")
+        }
+    }
     Pane {
         anchors.centerIn: parent
-        ColumnLayout {
-            Button {
-                text: "Back"
-                onClicked: mainStackView.pop()
+        Frame {
+            ColumnLayout {
+                Button {
+                    text: "Back"
+                    onClicked: mainStackView.pop()
+                }
             }
         }
     }

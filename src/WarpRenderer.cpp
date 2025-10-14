@@ -18,19 +18,19 @@ WarpRenderer::~WarpRenderer()
     delete _program;
 }
 
-void WarpRenderer::setWarpColor(const QColor& value)
+void WarpRenderer::setColor(const QColor& value)
 {
-    _warpColor.set(value);
+    _color = value;
 }
 
 void WarpRenderer::setEVColor(const QColor& value)
 {
-    _evColor.set(value);
+    _evColor = value;
 }
 
 void WarpRenderer::setRadius(const qreal& value)
 {
-    _radius.set(value);
+    _radius = value;
 }
 
 void WarpRenderer::updateView()
@@ -59,11 +59,11 @@ void WarpRenderer::renderGL()
     _program->use();
     if (_nextSineTime < _time) updateNextSine();
     if (_updateModel) updateMVP();
-    if (_warpColor.updated()) _warpColorUniform.setColor4f(_warpColor.get());
+    if (_color.updated()) _colorUniform.setColor4f(_color.get());
     if (_evColor.updated()) _evColorUniform.setColor4f(_evColor.get());
     if (_radius.updated()) _radiusUniform.set1f(_radius.get());
     _timeUniform.set1f(_time);
-    _sinesSSBO->bindToShaderStorageBuffer(0);
+    _sinesSSBO->bindToShaderStorage(0);
     _vertexArray->bind();
     _vertexArray->draw();
     _vertexArray->release();
@@ -80,10 +80,11 @@ void WarpRenderer::initProgram()
     _projectionUniform = _program->uniform("projection");
     _scaleUniform = _program->uniform("scale");
     _timeUniform = _program->uniform("time");
-    _warpColorUniform = _program->uniform("warpColor");
+    _colorUniform = _program->uniform("wColor");
     _evColorUniform = _program->uniform("evColor");
     _radiusUniform = _program->uniform("radius");
     _program->uniform("lifeDuration").set1f(sineLifetime);
+    _program->setStorageBlockBinding("SineBuffer",0);
 }
 
 void WarpRenderer::initSineBuffer()
@@ -100,7 +101,6 @@ void WarpRenderer::initSineBuffer()
     }
     _nextSineTime = lf;
     _sinesSSBO = OpenGLBuffer::fromData(sizeof(SineBuffer),&_sineBuffer,GL_DYNAMIC_DRAW);
-    _program->setStorageBlockBinding("SineBuffer",0);
 }
 
 void WarpRenderer::initVertexArray()
@@ -114,7 +114,7 @@ void WarpRenderer::initVertexArray()
     _arrayBuffer = OpenGLBuffer::fromData(vertices,GL_STATIC_DRAW);
     _arrayBuffer->bind(GL_ARRAY_BUFFER);
     _vertexArray = new OpenGLVertexArray(GL_TRIANGLE_STRIP,vertices.size()/2,1);
-    _vertexArray->add(_program->location("position"),2,GL_FLOAT,8,0);
+    _vertexArray->addf(_program->location("position"),2,GL_FLOAT,8,0);
 }
 
 void WarpRenderer::updateMVP()

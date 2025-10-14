@@ -7,8 +7,3 @@ OpenGLRenderer::OpenGLRenderer(PortalRenderer* parent):
 {
     Q_ASSERT(parent);
 }
-
-PortalRenderer* OpenGLRenderer::parent() const
-{
-    return _parent;
-}

@@ -8,5 +8,9 @@
         <file>qml/Fermi/Label.qml</file>
         <file>qml/Fermi/Button.qml</file>
         <file>qml/Fermi/ApplicationWindow.qml</file>
+        <file>qml/AtomPage.qml</file>
+        <file>qml/Fermi/Frame.qml</file>
+        <file>qml/AtomListView.qml</file>
+        <file>qml/Fermi/Page.qml</file>
     </qresource>
 </RCC>

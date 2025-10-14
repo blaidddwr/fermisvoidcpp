@@ -18,15 +18,15 @@ public:
     constexpr static qreal sineLifetime {20.0};
     explicit WarpRenderer(PortalRenderer* parent = nullptr);
     virtual ~WarpRenderer() override;
-    void setWarpColor(const QColor& value);
-    void setEVColor(const QColor& value);
-    void setRadius(const qreal& value);
-    void updateView();
-    void updateProjection();
     void initGL();
     void renderGL();
+    void setColor(const QColor& value);
+    void setEVColor(const QColor& value);
+    void setRadius(const qreal& value);
+    void updateProjection();
+    void updateView();
 private:
-    struct Sine
+    struct __attribute__((packed)) Sine
     {
         float amplitude;
         float frequency;
@@ -34,7 +34,7 @@ private:
         float velocity;
         float lifetime;
     };
-    struct SineBuffer
+    struct __attribute__((packed)) SineBuffer
     {
         quint32 size;
         Sine sines[sineSize];
@@ -45,12 +45,13 @@ private:
     void updateMVP();
     void updateNextSine();
     Clock _clock;
+    Latch<QColor> _color;
     Latch<QColor> _evColor;
-    Latch<QColor> _warpColor;
     Latch<qreal> _radius {0.0};
     OpenGLBuffer* _arrayBuffer {nullptr};
     OpenGLBuffer* _sinesSSBO {nullptr};
     OpenGLProgram* _program {nullptr};
+    OpenGLProgram::Uniform _colorUniform;
     OpenGLProgram::Uniform _evColorUniform;
     OpenGLProgram::Uniform _modelUniform;
     OpenGLProgram::Uniform _projectionUniform;
@@ -58,7 +59,6 @@ private:
     OpenGLProgram::Uniform _scaleUniform;
     OpenGLProgram::Uniform _timeUniform;
     OpenGLProgram::Uniform _viewUniform;
-    OpenGLProgram::Uniform _warpColorUniform;
     OpenGLVertexArray* _vertexArray {nullptr};
     QMatrix4x4 _model;
     SineBuffer _sineBuffer;

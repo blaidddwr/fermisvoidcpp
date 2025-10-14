@@ -8,16 +8,6 @@ qreal QuickRenderer::aspectRatio() const
     return qreal(_viewport.width())/qreal(_viewport.height());
 }
 
-const QSize& QuickRenderer::viewport() const
-{
-    return _viewport;
-}
-
-QQuickWindow* QuickRenderer::window()
-{
-    return _window;
-}
-
 void QuickRenderer::setViewport(const QSize& size)
 {
     if (_viewport != size)
@@ -31,8 +21,8 @@ void QuickRenderer::setWindow(QQuickWindow* window)
 {
     if (_window)
     {
-        disconnect(window,&QQuickWindow::beforeRendering,this,&QuickRenderer::initialize);
-        disconnect(window,&QQuickWindow::beforeRenderPassRecording,this,&QuickRenderer::paint);
+        disconnect(_window,&QQuickWindow::beforeRendering,this,&QuickRenderer::initialize);
+        disconnect(_window,&QQuickWindow::beforeRenderPassRecording,this,&QuickRenderer::paint);
     }
     _window = window;
     if (_window)
@@ -53,12 +43,6 @@ void QuickRenderer::setWindow(QQuickWindow* window)
             );
     }
 }
-
-void QuickRenderer::initGL() {}
-
-void QuickRenderer::paintGL() {}
-
-void QuickRenderer::resizeGL() {}
 
 void QuickRenderer::initialize()
 {

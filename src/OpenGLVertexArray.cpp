@@ -10,7 +10,7 @@ OpenGLVertexArray::OpenGLVertexArray(GLenum mode,GLsizei count,GLsizei instanceC
     glBindVertexArray(_id);
 }
 
-void OpenGLVertexArray::add(
+void OpenGLVertexArray::addf(
     GLuint location
     ,GLint size
     ,GLenum type
@@ -21,6 +21,23 @@ void OpenGLVertexArray::add(
 {
     glEnableVertexAttribArray(location);
     glVertexAttribPointer(location,size,type,GL_FALSE,stride,reinterpret_cast<const void*>(offset));
+    if (divisor)
+    {
+        glVertexAttribDivisor(location,divisor);
+    }
+}
+
+void OpenGLVertexArray::addi(
+    GLuint location
+    ,GLint size
+    ,GLenum type
+    ,GLsizei stride
+    ,int offset
+    ,GLuint divisor
+    )
+{
+    glEnableVertexAttribArray(location);
+    glVertexAttribIPointer(location,size,type,stride,reinterpret_cast<const void*>(offset));
     if (divisor)
     {
         glVertexAttribDivisor(location,divisor);

@@ -1,43 +1,16 @@
+#include "AtomRenderer.h"
 #include "PortalRenderer.h"
 #include "WarpRenderer.h"
 
 PortalRenderer::PortalRenderer():
-    _warp(new WarpRenderer(this))
+    _atom(new AtomRenderer(this))
+    ,_warp(new WarpRenderer(this))
 {}
-
-void PortalRenderer::setWarpColor(const QColor& value)
-{
-    _warp->setWarpColor(value);
-}
-
-void PortalRenderer::setEVColor(const QColor& value)
-{
-    _warp->setEVColor(value);
-}
-
-void PortalRenderer::setWarpRadius(qreal value)
-{
-    _warp->setRadius(value);
-}
-
-const QMatrix4x4& PortalRenderer::view() const
-{
-    return _view;
-}
-
-const QMatrix4x4& PortalRenderer::projection() const
-{
-    return _projection;
-}
-
-qreal PortalRenderer::scale() const
-{
-    return _scale;
-}
 
 void PortalRenderer::initGL()
 {
     _warp->initGL();
+    _atom->initGL();
 }
 
 void PortalRenderer::paintGL()
@@ -46,11 +19,16 @@ void PortalRenderer::paintGL()
     {
         _projection = QMatrix4x4();
         auto a = aspectRatio();
-        _projection.ortho(-a,a,-1,1,-1,1);
+        _projection.ortho(-a,a,-1.0,1.0,-1.0,1.0);
         _warp->updateProjection();
+        _atom->updateProjection();
         _updateProjection = false;
     }
+    glEnable(GL_DEPTH_TEST);
+    glClear(GL_DEPTH_BUFFER_BIT);
     _warp->renderGL();
+    _atom->renderGL();
+    glClear(GL_DEPTH_BUFFER_BIT);
 }
 
 void PortalRenderer::resizeGL()

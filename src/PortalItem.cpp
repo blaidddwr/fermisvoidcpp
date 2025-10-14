@@ -2,52 +2,22 @@
 #include "PortalRenderer.h"
 #include <QQuickWindow>
 
+PortalItem* PortalItem::_instance {nullptr};
+
+PortalItem& PortalItem::instance()
+{
+    Q_ASSERT(_instance);
+    return *_instance;
+}
+
 PortalItem::PortalItem(QQuickItem* parent):
     QuickItem(parent)
+    ,_atom(new AtomItem(this))
+    ,_warp(new WarpItem(this))
 {
+    Q_ASSERT(!_instance);
+    _instance = this;
     startTimer(16);
-}
-
-const QColor& PortalItem::warpColor() const
-{
-    return _warpColor.peek();
-}
-
-const QColor& PortalItem::evColor() const
-{
-    return _evColor.peek();
-}
-
-qreal PortalItem::warpRadius() const
-{
-    return _warpRadius.peek();
-}
-
-void PortalItem::setWarpColor(const QColor& value)
-{
-    if (_warpColor.peek() != value)
-    {
-        _warpColor.set(value);
-        emit warpColorChanged(value);
-    }
-}
-
-void PortalItem::setEVColor(const QColor& value)
-{
-    if (_evColor.peek() != value)
-    {
-        _evColor.set(value);
-        emit evColorChanged(value);
-    }
-}
-
-void PortalItem::setWarpRadius(qreal value)
-{
-    if (_warpRadius.peek() != value)
-    {
-        _warpRadius.set(value);
-        emit warpRadiusChanged(value);
-    }
 }
 
 QuickRenderer* PortalItem::createRenderer()
@@ -59,9 +29,8 @@ void PortalItem::sync(QuickRenderer* renderer)
 {
     auto pr = qobject_cast<PortalRenderer*>(renderer);
     Q_ASSERT(pr);
-    if (_warpColor.updated()) pr->setWarpColor(_warpColor.get());
-    if (_evColor.updated()) pr->setEVColor(_evColor.get());
-    if (_warpRadius.updated()) pr->setWarpRadius(_warpRadius.get());
+    _warp->sync(pr->warp());
+    _atom->sync(pr->atom());
 }
 
 void PortalItem::timerEvent(QTimerEvent* event)

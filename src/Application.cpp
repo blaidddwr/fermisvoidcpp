@@ -1,11 +1,13 @@
 #include "Application.h"
+#include "AtomItem.h"
+#include "AtomListModel.h"
+#include "GameController.h"
 #include "PortalItem.h"
-#include <QQmlApplicationEngine>
+#include "WarpItem.h"
 #include <QQuickView>
 #include <QSGRendererInterface>
 #include <QSurfaceFormat>
 #include <qqml.h>
-
 
 Application::Application(int& argc,char** argv):
     QGuiApplication(argc,argv)
@@ -16,11 +18,9 @@ Application::Application(int& argc,char** argv):
     format.setProfile(QSurfaceFormat::CoreProfile);
     format.setSwapBehavior(QSurfaceFormat::DoubleBuffer);
     QSurfaceFormat::setDefaultFormat(format);
+    qmlRegisterSingletonInstance("internal",1,0,"Game",&GameController::instance());
     qmlRegisterType<PortalItem>("internal",1,0,"Portal");
-    _engine = new QQmlApplicationEngine(this);
-    _engine->load("qrc:/qml/Main.qml");
-    if (_engine->rootObjects().isEmpty())
-    {
-        std::exit(-1);
-    }
+    qmlRegisterUncreatableType<WarpItem>("internal",1,0,"Warp",tr("Member Singleton"));
+    qmlRegisterUncreatableType<AtomItem>("internal",1,0,"Atom",tr("Member Singleton"));
+    qmlRegisterType<AtomListModel>("internal",1,0,"AtomListModel");
 }

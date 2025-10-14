@@ -3,5 +3,7 @@ import QtQuick.Controls auto
 
 ApplicationWindow 1.0 ApplicationWindow.qml
 Button 1.0 Button.qml
+Frame 1.0 Frame.qml
 Label 1.0 Label.qml
+Page 1.0 Page.qml
 Pane 1.0 Pane.qml

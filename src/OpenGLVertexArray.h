@@ -6,7 +6,15 @@ class OpenGLVertexArray : private QOpenGLFunctions_4_5_Core
 {
 public:
     OpenGLVertexArray(GLenum mode,GLsizei count,GLsizei instanceCount = 1);
-    void add(
+    void addf(
+        GLuint location
+        ,GLint size
+        ,GLenum type
+        ,GLsizei stride
+        ,int offset
+        ,GLuint divisor = 0
+        );
+    void addi(
         GLuint location
         ,GLint size
         ,GLenum type

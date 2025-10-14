@@ -14,15 +14,10 @@ ApplicationWindow {
     }
     title: qsTr("Fermi's Void")
     Portal {
+        id: mainPortal
         anchors.fill: parent
-        warpColor: "#3e009c"
-        evColor: "#6600ff"
-        SequentialAnimation on warpRadius {
-            NumberAnimation { to: 1; duration: 5000; easing.type: Easing.InOutQuad }
-            NumberAnimation { to: 0; duration: 5000; easing.type: Easing.InOutQuad }
-            loops: Animation.Infinite
-            running: true
-        }
+        warp.color: "#3e009c"
+        warp.evColor: "#6600ff"
     }
     StackView {
         id: mainStackView

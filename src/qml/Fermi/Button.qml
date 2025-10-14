@@ -6,12 +6,12 @@ T.Button {
     property real borderSize: 1.5
     property real minWidth: 120
     implicitWidth: Math.max(
-        implicitBackgroundWidth+leftInset+rightInset,
-        implicitContentWidth+leftPadding+rightPadding
+        implicitBackgroundWidth+leftInset+rightInset
+        ,implicitContentWidth+leftPadding+rightPadding
         )
     implicitHeight: Math.max(
-        implicitBackgroundHeight+topInset+bottomInset,
-        implicitContentHeight+topPadding+bottomPadding
+        implicitBackgroundHeight+topInset+bottomInset
+        ,implicitContentHeight+topPadding+bottomPadding
         )
     padding: 6
     horizontalPadding: padding+(6*borderSize)+2

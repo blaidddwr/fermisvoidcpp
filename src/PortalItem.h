@@ -1,34 +1,27 @@
 #ifndef PORTALITEM_H
 #define PORTALITEM_H
+#include "AtomItem.h"
 #include "QuickItem.h"
-#include "Latch.h"
+#include "WarpItem.h"
 
 class PortalItem : public QuickItem
 {
     Q_OBJECT
-    Q_PROPERTY(QColor warpColor READ warpColor WRITE setWarpColor NOTIFY warpColorChanged)
-    Q_PROPERTY(QColor evColor READ evColor WRITE setEVColor NOTIFY evColorChanged)
-    Q_PROPERTY(qreal warpRadius READ warpRadius WRITE setWarpRadius NOTIFY warpRadiusChanged)
 public:
+    Q_PROPERTY(AtomItem* atom READ atom CONSTANT)
+    Q_PROPERTY(WarpItem* warp READ warp CONSTANT)
+    static PortalItem& instance();
     PortalItem(QQuickItem* parent = nullptr);
-    const QColor& warpColor() const;
-    const QColor& evColor() const;
-    qreal warpRadius() const;
-    void setWarpColor(const QColor& value);
-    void setEVColor(const QColor& value);
-    void setWarpRadius(qreal value);
-signals:
-    void warpColorChanged(const QColor& value);
-    void evColorChanged(const QColor& value);
-    void warpRadiusChanged(const QColor& value);
+    AtomItem* atom() const { return _atom; }
+    WarpItem* warp() const { return _warp; }
 protected:
     virtual QuickRenderer* createRenderer() override final;
     virtual void sync(QuickRenderer* renderer) override final;
     virtual void timerEvent(QTimerEvent* event) override final;
 private:
-    Latch<QColor> _warpColor;
-    Latch<QColor> _evColor;
-    Latch<qreal> _warpRadius {0.0};
+    static PortalItem* _instance;
+    AtomItem* _atom {nullptr};
+    WarpItem* _warp {nullptr};
 };
 
 #endif

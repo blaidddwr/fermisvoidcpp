@@ -8,7 +8,14 @@ CONFIG += c++20
 
 SOURCES += \
         Application.cpp \
+        Atom.cpp \
+        AtomItem.cpp \
+        AtomListModel.cpp \
+        AtomRenderer.cpp \
+        Atoms.cpp \
         Clock.cpp \
+        GObject.cpp \
+        GameController.cpp \
         OpenGLBuffer.cpp \
         OpenGLProgram.cpp \
         OpenGLRenderer.cpp \
@@ -18,6 +25,7 @@ SOURCES += \
         PortalRenderer.cpp \
         QuickItem.cpp \
         QuickRenderer.cpp \
+        WarpItem.cpp \
         WarpRenderer.cpp \
         main.cpp
 
@@ -28,7 +36,15 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 HEADERS += \
     Application.h \
+    Atom.h \
+    AtomInstance.h \
+    AtomItem.h \
+    AtomListModel.h \
+    AtomRenderer.h \
+    Atoms.h \
     Clock.h \
+    GObject.h \
+    GameController.h \
     Latch.h \
     OpenGLBuffer.h \
     OpenGLProgram.h \
@@ -39,6 +55,7 @@ HEADERS += \
     PortalRenderer.h \
     QuickItem.h \
     QuickRenderer.h \
+    WarpItem.h \
     WarpRenderer.h
 
 RESOURCES += \

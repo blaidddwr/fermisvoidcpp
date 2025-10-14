@@ -8,7 +8,7 @@ public:
     static OpenGLShader fromFile(const QString& path,GLenum type);
     OpenGLShader(const QString& source,GLenum type);
     ~OpenGLShader();
-    GLuint id() const;
+    GLuint id() const { return _id; }
 private:
     GLuint _id;
 };

@@ -40,8 +40,3 @@ OpenGLShader::~OpenGLShader()
 {
     glDeleteShader(_id);
 }
-
-GLuint OpenGLShader::id() const
-{
-    return _id;
-}

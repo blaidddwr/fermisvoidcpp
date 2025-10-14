@@ -47,7 +47,7 @@ void OpenGLBuffer::bindToUniform(GLuint index)
     glBindBufferBase(GL_UNIFORM_BUFFER,index,_id);
 }
 
-void OpenGLBuffer::bindToShaderStorageBuffer(GLuint index)
+void OpenGLBuffer::bindToShaderStorage(GLuint index)
 {
     glBindBufferBase(GL_SHADER_STORAGE_BUFFER,index,_id);
 }

@@ -15,7 +15,7 @@ in vec2 fPosition;
 
 uniform float scale;
 uniform float time;
-uniform vec4 warpColor;
+uniform vec4 wColor;
 uniform vec4 evColor;
 uniform float radius;
 uniform float lifeDuration;
@@ -28,26 +28,50 @@ layout(std430) buffer SineBuffer
 
 out vec4 color;
 
+float getLifeScale(uint i)
+{
+    float age = (lifeDuration-max(sines[i].lifetime-time,0.0))/lifeDuration;
+    return sin(PI*age);
+}
+
+float getIntensity(uint i,float fRadius)
+{
+    float angle = 2.0*PI*(
+            (sines[i].frequency*fRadius*scale)
+            +(sines[i].velocity*time)
+        );
+    angle += sines[i].phase;
+    return 0.5*(1.0+sin(angle));
+}
+
+vec3 getEVColor(float fRadius)
+{
+    const float dropRate = 100.0;
+    //TODO: make it smoothly scale off on the inside too
+    float angle = min((fRadius-radius)*scale*dropRate,PI/2.0);
+    return evColor.rgb*cos(angle);
+}
+
 void main()
 {
-    float d = distance(fPosition,vec2(0.0));
-    if (d < radius)
+    //TODO: use framebuffer to render to 1d texture for sine waves, since they vary in only one dimension
+    float fRadius = distance(fPosition,vec2(0.0));
+    if (fRadius < radius)
     {
         discard;
     }
-    float f = 0.0;
-    float den = 0.0;
+    float intensity = 0.0;
+    float intensityMax = 0.0;
     for (uint i = 0;i < sineSize;i++)
     {
         if (time > sines[i].lifetime)
         {
             continue;
         }
-        float a = sin(PI*(lifeDuration-max(sines[i].lifetime-time,0.0))/lifeDuration);
-        f += a*0.5*(1.0+sin(2.0*PI*((sines[i].frequency*d*scale)+(sines[i].velocity*time))+sines[i].phase));
-        den += a;
+        float lifeScale = getLifeScale(i);
+        intensity += lifeScale*getIntensity(i,fRadius);
+        intensityMax += lifeScale;
     }
-    f /= den;
-    vec3 ev = evColor.rgb*cos(min((d-radius)*scale*100.0,PI/2.0));
-    color = vec4(max(ev,warpColor.rgb*f),1.0);
+    intensity /= intensityMax;
+    color = vec4(max(getEVColor(fRadius),wColor.rgb*intensity),1.0);
 }

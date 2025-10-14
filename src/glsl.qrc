@@ -2,5 +2,7 @@
     <qresource prefix="/">
         <file>glsl/warp.f.glsl</file>
         <file>glsl/warp.v.glsl</file>
+        <file>glsl/atom.v.glsl</file>
+        <file>glsl/atom.f.glsl</file>
     </qresource>
 </RCC>

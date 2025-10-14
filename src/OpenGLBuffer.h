@@ -13,7 +13,7 @@ public:
     void read(GLintptr offset, GLsizeiptr size, void* data);
     void bind(GLenum target);
     void bindToUniform(GLuint index);
-    void bindToShaderStorageBuffer(GLuint index);
+    void bindToShaderStorage(GLuint index);
 private:
     GLuint _id;
 };
