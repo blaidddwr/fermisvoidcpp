@@ -7,19 +7,22 @@ ListView {
     Control { id: control }
     property real horizontalPadding: 12
     property real verticalPadding: 6
-    property real borderWidth: 12
+    property real borderWidth: 6
     readonly property int currentAtomicNumber: currentIndex === -1 ? -1 : currentIndex+1
     id: root
     model: AtomListModel {}
-    implicitWidth: control.font.pointSize*14+(2*(horizontalPadding+verticalPadding+borderWidth))
+    implicitWidth: control.font.pointSize*16+(2*(horizontalPadding+borderWidth))+15
     spacing: 6
     delegate: Item {
         id: delegate
         property real borderWidth: ListView.isCurrentItem ? root.borderWidth : 0
         Behavior on borderWidth {
-            SmoothedAnimation { duration: 200 }
+            SmoothedAnimation {
+                velocity: -1
+                duration: 400
+            }
         }
-        implicitWidth: rowLayout.implicitWidth+(2*root.horizontalPadding+borderWidth)
+        implicitWidth: rowLayout.implicitWidth+(2*(root.horizontalPadding+borderWidth))
         implicitHeight: rowLayout.implicitHeight+(2*root.verticalPadding)
         Rectangle {
             anchors.fill: parent
@@ -35,14 +38,14 @@ ListView {
             anchors.top: parent.top
             anchors.right: parent.right
             anchors.bottom: parent.bottom
-            width: delegate.borderWidth/4
+            width: delegate.borderWidth/2
             color: control.palette.light
         }
         Rectangle {
             anchors.top: parent.top
             anchors.left: parent.left
             anchors.bottom: parent.bottom
-            width: delegate.borderWidth/4
+            width: delegate.borderWidth/2
             color: control.palette.light
         }
         RowLayout {
@@ -64,7 +67,7 @@ ListView {
             }
             Label {
                 Layout.preferredWidth: control.font.pointSize*4
-                text: charge
+                text: bonds
             }
         }
         MouseArea {

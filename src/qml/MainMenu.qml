@@ -16,14 +16,11 @@ Page {
         Frame {
             ColumnLayout {
                 Button {
-                    text: "New"
+                    text: "Atoms"
                     onClicked: {
                         Game.start()
                         mainStackView.push("AtomPage.qml")
                     }
-                }
-                Button {
-                    text: "Continue"
                 }
                 Button {
                     text: "Settings"

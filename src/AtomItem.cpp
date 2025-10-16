@@ -15,20 +15,20 @@ void AtomItem::setAtom(int atomicNumber)
     if (atomicNumber == -1)
     {
         _atoms.set() = {};
-        setDesiredWarpRadius(0.0);
+        setRadius(0.0);
     }
     else
     {
         _atoms.set() = {{0,0,0,atomicNumber,false,false,false,false}};
-        setDesiredWarpRadius(0.8);
+        setRadius(0.8);
     }
 }
 
-void AtomItem::setDesiredWarpRadius(qreal value)
+void AtomItem::setRadius(qreal value)
 {
-    if (_desiredWarpRadius != value)
+    if (_radius != value)
     {
-        _desiredWarpRadius = value;
-        emit desiredWarpRadiusChanged(value);
+        _radius = value;
+        emit radiusChanged(value);
     }
 }

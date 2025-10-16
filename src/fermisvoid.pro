@@ -20,11 +20,14 @@ SOURCES += \
         OpenGLProgram.cpp \
         OpenGLRenderer.cpp \
         OpenGLShader.cpp \
+        OpenGLTexture.cpp \
+        OpenGLTexture1D.cpp \
         OpenGLVertexArray.cpp \
         PortalItem.cpp \
         PortalRenderer.cpp \
         QuickItem.cpp \
         QuickRenderer.cpp \
+        SinesRenderer.cpp \
         WarpItem.cpp \
         WarpRenderer.cpp \
         main.cpp
@@ -50,11 +53,14 @@ HEADERS += \
     OpenGLProgram.h \
     OpenGLRenderer.h \
     OpenGLShader.h \
+    OpenGLTexture.h \
+    OpenGLTexture1D.h \
     OpenGLVertexArray.h \
     PortalItem.h \
     PortalRenderer.h \
     QuickItem.h \
     QuickRenderer.h \
+    SinesRenderer.h \
     WarpItem.h \
     WarpRenderer.h
 

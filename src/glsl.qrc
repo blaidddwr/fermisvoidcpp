@@ -4,5 +4,6 @@
         <file>glsl/warp.v.glsl</file>
         <file>glsl/atom.v.glsl</file>
         <file>glsl/atom.f.glsl</file>
+        <file>glsl/sines.c.glsl</file>
     </qresource>
 </RCC>

@@ -1,4 +1,3 @@
-#include "Atom.h"
 #include "AtomListModel.h"
 #include "Atoms.h"
 #include <QHash>
@@ -13,10 +12,21 @@ AtomListModel::AtomListModel()
     connect(&Atoms::instance(),&Atoms::atomsReset,this,&AtomListModel::onAtomsReset);
 }
 
-int AtomListModel::rowCount(const QModelIndex& parent) const
+const Atom* AtomListModel::getAtom(int atomicNumber) const
 {
-    Q_ASSERT(!parent.isValid());
-    return Atoms::instance().size();
+    Q_ASSERT(atomicNumber > 0);
+    Q_ASSERT(atomicNumber <= Atoms::instance().size());
+    return &Atoms::instance().get(atomicNumber);
+}
+
+QHash<int,QByteArray> AtomListModel::roleNames() const
+{
+    return {
+        {AtomicNumberRole,"atomicNumber"}
+        ,{MassRole,"mass"}
+        ,{ColorRole,"atomicColor"}
+        ,{BondsRole,"bonds"}
+    };
 }
 
 QVariant AtomListModel::data(const QModelIndex& index,int role) const
@@ -33,7 +43,7 @@ QVariant AtomListModel::data(const QModelIndex& index,int role) const
         return Atoms::instance().get(index.row()+1).mass();
     case ColorRole:
         return Atoms::instance().get(index.row()+1).color();
-    case ChargeRole:
+    case BondsRole:
     {
         const auto& atom = Atoms::instance().get(index.row()+1);
         QString ret;
@@ -59,14 +69,10 @@ QVariant AtomListModel::data(const QModelIndex& index,int role) const
     }
 }
 
-QHash<int,QByteArray> AtomListModel::roleNames() const
+int AtomListModel::rowCount(const QModelIndex& parent) const
 {
-    return {
-        {AtomicNumberRole,"atomicNumber"}
-        ,{MassRole,"mass"}
-        ,{ColorRole,"atomicColor"}
-        ,{ChargeRole,"charge"}
-    };
+    Q_ASSERT(!parent.isValid());
+    return Atoms::instance().size();
 }
 
 void AtomListModel::onAtomsAboutToReset()

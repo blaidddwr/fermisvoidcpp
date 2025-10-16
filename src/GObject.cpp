@@ -1,9 +1,9 @@
 #include "GObject.h"
 #include <QHash>
 
-quint64 GObject::_nextId {0};
-QList<quint64> GObject::_freeIds;
 QHash<quint64,GObject*> GObject::_objects;
+QList<quint64> GObject::_freeIds;
+quint64 GObject::_nextId {0};
 
 GObject* GObject::get(quint64 id)
 {

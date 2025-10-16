@@ -12,13 +12,38 @@ Atom::Atom(
     ,QObject* parent
     ):
     GObject(parent)
-    ,_atomicNumber(atomicNumber)
-    ,_mass(mass)
-    ,_color(color)
     ,_topBond(topBond)
     ,_rightBond(rightBond)
     ,_bottomBond(bottomBond)
     ,_leftBond(leftBond)
+    ,_color(color)
+    ,_atomicNumber(atomicNumber)
+    ,_mass(mass)
 {
     Q_ASSERT(atomicNumber >= 1);
+}
+
+bool Atom::life() const
+{
+    return (
+        _topBond == Covalent
+        && _rightBond == Covalent
+        && _bottomBond == Covalent
+        && _leftBond == Covalent
+        );
+}
+
+bool Atom::solvent() const
+{
+    return abs(charge()) == 4;
+}
+
+int Atom::charge() const
+{
+    return (
+        (_topBond == Covalent ? 0 : _topBond == Positive ? 1 : -1)
+        +(_rightBond == Covalent ? 0 : _rightBond == Positive ? 1 : -1)
+        +(_bottomBond == Covalent ? 0 : _bottomBond == Positive ? 1 : -1)
+        +(_leftBond == Covalent ? 0 : _leftBond == Positive ? 1 : -1)
+        );
 }

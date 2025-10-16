@@ -8,9 +8,9 @@ class Atoms : public GObject
     Q_OBJECT
 public:
     static Atoms& instance();
-    void generateAtoms(int seed);
-    int size() const { return _atoms.size(); }
     const Atom& get(int atomicNumber) const;
+    int size() const { return _atoms.size(); }
+    void generateAtoms(int seed);
 signals:
     void atomsAboutToReset();
     void atomsReset();

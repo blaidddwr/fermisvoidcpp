@@ -11,6 +11,13 @@ Atoms& Atoms::instance()
     return *_instance;
 }
 
+const Atom& Atoms::get(int atomicNumber) const
+{
+    Q_ASSERT(atomicNumber >= 1);
+    Q_ASSERT(atomicNumber <= size());
+    return *_atoms.at(atomicNumber-1);
+}
+
 void Atoms::generateAtoms(int seed)
 {
     emit atomsAboutToReset();
@@ -40,13 +47,6 @@ void Atoms::generateAtoms(int seed)
             );
     }
     emit atomsReset();
-}
-
-const Atom& Atoms::get(int atomicNumber) const
-{
-    Q_ASSERT(atomicNumber >= 1);
-    Q_ASSERT(atomicNumber <= size());
-    return *_atoms.at(atomicNumber-1);
 }
 
 Atoms::Atoms():

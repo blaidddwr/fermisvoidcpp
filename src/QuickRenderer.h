@@ -14,9 +14,9 @@ class QuickRenderer : public QObject, protected QOpenGLFunctions_4_5_Core
 {
     Q_OBJECT
 public:
-    qreal aspectRatio() const;
-    const QSize& viewport() const { return _viewport; }
     QQuickWindow* window() { return _window; }
+    const QSize& viewport() const { return _viewport; }
+    qreal aspectRatio() const;
     void setViewport(const QSize& size);
     void setWindow(QQuickWindow* window);
 protected:
@@ -27,8 +27,8 @@ private slots:
     void initialize();
     void paint();
 private:
-    QSize _viewport;
     QQuickWindow* _window {nullptr};
+    QSize _viewport;
     bool _initialized {false};
     bool _resized {false};
 };

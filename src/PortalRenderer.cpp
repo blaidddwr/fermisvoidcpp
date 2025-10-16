@@ -1,14 +1,17 @@
 #include "AtomRenderer.h"
 #include "PortalRenderer.h"
+#include "SinesRenderer.h"
 #include "WarpRenderer.h"
 
 PortalRenderer::PortalRenderer():
     _atom(new AtomRenderer(this))
+    ,_sines(new SinesRenderer(this))
     ,_warp(new WarpRenderer(this))
 {}
 
 void PortalRenderer::initGL()
 {
+    _sines->initGL();
     _warp->initGL();
     _atom->initGL();
 }
@@ -24,6 +27,7 @@ void PortalRenderer::paintGL()
         _atom->updateProjection();
         _updateProjection = false;
     }
+    _sines->renderGL();
     glEnable(GL_DEPTH_TEST);
     glClear(GL_DEPTH_BUFFER_BIT);
     _warp->renderGL();

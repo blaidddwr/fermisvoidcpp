@@ -5,7 +5,6 @@
 
 /*
  * Mass is measured in Dalton(u).
- * Bonds are true for positive and false for negative.
  */
 class Atom : public GObject
 {
@@ -17,13 +16,16 @@ public:
         ,Covalent
     };
     Q_ENUM(Bond)
-    Q_PROPERTY(int atomicNumber READ atomicNumber CONSTANT)
-    Q_PROPERTY(qreal mass READ mass CONSTANT)
-    Q_PROPERTY(QColor color READ color CONSTANT)
-    Q_PROPERTY(Bond topBond READ topBond CONSTANT)
-    Q_PROPERTY(Bond rightBond READ rightBond CONSTANT)
     Q_PROPERTY(Bond bottomBond READ bottomBond CONSTANT)
     Q_PROPERTY(Bond leftBond READ leftBond CONSTANT)
+    Q_PROPERTY(Bond rightBond READ rightBond CONSTANT)
+    Q_PROPERTY(Bond topBond READ topBond CONSTANT)
+    Q_PROPERTY(QColor color READ color CONSTANT)
+    Q_PROPERTY(bool life READ life CONSTANT)
+    Q_PROPERTY(bool solvent READ solvent CONSTANT)
+    Q_PROPERTY(int atomicNumber READ atomicNumber CONSTANT)
+    Q_PROPERTY(int charge READ charge CONSTANT)
+    Q_PROPERTY(qreal mass READ mass CONSTANT)
     Atom(
         int atomicNumber
         ,qreal mass
@@ -34,21 +36,24 @@ public:
         ,Bond leftBond
         ,QObject *parent = nullptr
         );
-    int atomicNumber() const { return _atomicNumber; }
-    qreal mass() const { return _mass; }
-    const QColor& color() const { return _color; }
-    Bond topBond() const { return _topBond; }
-    Bond rightBond() const { return _rightBond; }
     Bond bottomBond() const { return _bottomBond; }
     Bond leftBond() const { return _leftBond; }
+    Bond rightBond() const { return _rightBond; }
+    Bond topBond() const { return _topBond; }
+    bool life() const;
+    bool solvent() const;
+    const QColor& color() const { return _color; }
+    int atomicNumber() const { return _atomicNumber; }
+    int charge() const;
+    qreal mass() const { return _mass; }
 private:
-    int _atomicNumber;
-    qreal _mass;
-    QColor _color;
     Bond _topBond;
     Bond _rightBond;
     Bond _bottomBond;
     Bond _leftBond;
+    QColor _color;
+    int _atomicNumber;
+    qreal _mass;
 };
 
 #endif

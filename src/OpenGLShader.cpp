@@ -6,11 +6,20 @@ OpenGLShader OpenGLShader::fromFile(const QString& path, GLenum type)
     QFile file(path);
     if (!file.open(QIODevice::ReadOnly))
     {
-        qDebug() << "Failed opening shader file:" << path;
+        qDebug().noquote() << path;
         qDebug().noquote() << file.errorString();
         std::exit(-1);
     }
-    return OpenGLShader(file.readAll(),type);
+    try
+    {
+        return OpenGLShader(file.readAll(),type);
+    }
+    catch (QString& infoLog)
+    {
+        qDebug().noquote() << path;
+        qDebug().noquote() << infoLog;
+        std::exit(-1);
+    }
 }
 
 OpenGLShader::OpenGLShader(const QString& source, GLenum type)
@@ -30,9 +39,7 @@ OpenGLShader::OpenGLShader(const QString& source, GLenum type)
         bytes.resize(param);
         GLsizei length;
         glGetShaderInfoLog(_id,param,&length,bytes.data());
-        qDebug() << "Shader Compile Failure:";
-        qDebug().noquote() << bytes.constData();
-        std::exit(-1);
+        throw QString(bytes);
     }
 }
 

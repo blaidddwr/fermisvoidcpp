@@ -4,20 +4,20 @@
 #include <QMatrix4x4>
 
 OpenGLProgram::Uniform::Uniform(OpenGLProgram* program,GLint index):
-    _p(program)
-    ,_index(index)
+    _index(index)
+    ,_p(program)
 {
     Q_ASSERT(program);
-}
-
-void OpenGLProgram::Uniform::set1i(int v0)
-{
-    _p->glUniform1i(_index,v0);
 }
 
 void OpenGLProgram::Uniform::set1f(float v0)
 {
     _p->glUniform1f(_index,v0);
+}
+
+void OpenGLProgram::Uniform::set1i(int v0)
+{
+    _p->glUniform1i(_index,v0);
 }
 
 void OpenGLProgram::Uniform::set3f(float v0,float v1,float v2)
@@ -35,7 +35,7 @@ void OpenGLProgram::Uniform::setColor4f(const QColor& color)
     _p->glUniform4f(_index,color.redF(),color.greenF(),color.blueF(),color.alphaF());
 }
 
-void OpenGLProgram::Uniform::setMatrix4f(const QMatrix4x4& matrix)
+void OpenGLProgram::Uniform::setMatrix4fv(const QMatrix4x4& matrix)
 {
     _p->glUniformMatrix4fv(_index,1,GL_FALSE,matrix.constData());
 }
@@ -60,6 +60,20 @@ OpenGLProgram::~OpenGLProgram()
     glDeleteProgram(_id);
 }
 
+GLint OpenGLProgram::location(const QString& name)
+{
+    auto ret = glGetAttribLocation(_id,name.toUtf8().constData());
+    Q_ASSERT(ret != -1);
+    return ret;
+}
+
+OpenGLProgram::Uniform OpenGLProgram::uniform(const QString& name)
+{
+    auto i = glGetUniformLocation(_id,name.toUtf8().constData());
+    Q_ASSERT(i != -1);
+    return Uniform(this,i);
+}
+
 void OpenGLProgram::add(const OpenGLShader& shader)
 {
     glAttachShader(_id,shader.id());
@@ -82,28 +96,16 @@ void OpenGLProgram::link()
     }
 }
 
-void OpenGLProgram::use()
-{
-    glUseProgram(_id);
-}
-
 void OpenGLProgram::release()
 {
     glUseProgram(0);
 }
 
-GLint OpenGLProgram::location(const QString& name)
+void OpenGLProgram::setStorageBlockBinding(const QString& name, GLuint index)
 {
-    auto ret = glGetAttribLocation(_id,name.toUtf8().constData());
-    Q_ASSERT(ret != -1);
-    return ret;
-}
-
-OpenGLProgram::Uniform OpenGLProgram::uniform(const QString& name)
-{
-    auto i = glGetUniformLocation(_id,name.toUtf8().constData());
-    Q_ASSERT(i != -1);
-    return Uniform(this,i);
+    auto sbIndex = glGetProgramResourceIndex(_id,GL_SHADER_STORAGE_BLOCK,name.toUtf8().constData());
+    Q_ASSERT(sbIndex != GL_INVALID_INDEX);
+    glShaderStorageBlockBinding(_id,sbIndex,index);
 }
 
 void OpenGLProgram::setUniformBlockBinding(const QString& name, GLuint index)
@@ -113,9 +115,7 @@ void OpenGLProgram::setUniformBlockBinding(const QString& name, GLuint index)
     glUniformBlockBinding(_id,ubIndex,index);
 }
 
-void OpenGLProgram::setStorageBlockBinding(const QString& name, GLuint index)
+void OpenGLProgram::use()
 {
-    auto sbIndex = glGetProgramResourceIndex(_id,GL_SHADER_STORAGE_BLOCK,name.toUtf8().constData());
-    Q_ASSERT(sbIndex != GL_INVALID_INDEX);
-    glShaderStorageBlockBinding(_id,sbIndex,index);
+    glUseProgram(_id);
 }
