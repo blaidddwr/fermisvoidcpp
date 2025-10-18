@@ -64,7 +64,10 @@ Page {
             duration: 200
         }
         ScriptAction {
-            script: mainPortal.atom.setAtom(atomListView.currentAtomicNumber)
+            script: {
+                if (root.StackView.activating) mainPortal.atom.activate()
+                mainPortal.atom.setAtom(atomListView.currentAtomicNumber)
+            }
         }
         SmoothedAnimation {
             target: mainPortal

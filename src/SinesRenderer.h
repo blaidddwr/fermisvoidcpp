@@ -20,8 +20,8 @@ public:
     OpenGLTexture1D& bubbleTexture() const { return *_bubbleTexture; }
     OpenGLTexture1D& smoothTexture() const { return *_smoothTexture; }
     OpenGLTexture1D& spikeTexture() const { return *_spikeTexture; }
-    void initGL();
-    void renderGL();
+    virtual void initGL() override final;
+    virtual void renderGL() override final;
 private:
     struct __attribute__((packed)) Sine
     {

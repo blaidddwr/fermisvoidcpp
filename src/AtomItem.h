@@ -2,25 +2,26 @@
 #define ATOMITEM_H
 #include "AtomInstance.h"
 #include "Latch.h"
-#include <QObject>
+#include "OpenGLItem.h"
 class AtomRenderer;
 
-class AtomItem : public QObject
+class AtomItem : public OpenGLItem
 {
     Q_OBJECT
     Q_PROPERTY(qreal radius READ radius NOTIFY radiusChanged);
 public:
-    explicit AtomItem(QObject *parent = nullptr);
+    explicit AtomItem(PortalItem *parent = nullptr);
+    Q_INVOKABLE void setAtom(int atomicNumber);
     qreal radius() const { return _radius; }
-    void sync(AtomRenderer& renderer);
 signals:
     void radiusChanged(qreal value);
-public slots:
-    void setAtom(int atomicNumber);
+protected:
+    virtual OpenGLRenderer* _createRenderer() const override final;
+    virtual void _sync(OpenGLRenderer* renderer) override final;
 private:
-    void setRadius(qreal value);
     Latch<QList<AtomInstance>> _atoms;
     qreal _radius {0.0};
+    void setRadius(qreal value);
 };
 
 #endif

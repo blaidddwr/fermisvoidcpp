@@ -20,9 +20,19 @@ PortalItem::PortalItem(QQuickItem* parent):
     startTimer(16);
 }
 
+void PortalItem::clearActive()
+{
+    _active.set() = nullptr;
+}
+
+void PortalItem::activate(OpenGLItem* item)
+{
+    _active.set() = item;
+}
+
 QuickRenderer* PortalItem::createRenderer()
 {
-    return new PortalRenderer;
+    return new PortalRenderer({_atom->createRenderer()});
 }
 
 void PortalItem::sync(QuickRenderer* renderer)
@@ -30,7 +40,13 @@ void PortalItem::sync(QuickRenderer* renderer)
     auto pr = qobject_cast<PortalRenderer*>(renderer);
     Q_ASSERT(pr);
     _warp->sync(pr->warp());
-    _atom->sync(pr->atom());
+    auto active = _active.peek();
+    if (_active.updated())
+    {
+        _active.get();
+        pr->setActive(active ? active->renderer() : nullptr);
+    }
+    if (active) active->sync();
 }
 
 void PortalItem::timerEvent(QTimerEvent* event)

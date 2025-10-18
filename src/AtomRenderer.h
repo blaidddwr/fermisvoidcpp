@@ -14,11 +14,11 @@ public:
     constexpr static int MaxInstanceSize {1024};
     explicit AtomRenderer(PortalRenderer* parent = nullptr);
     virtual ~AtomRenderer() override;
-    void initGL();
-    void renderGL();
+    virtual void initGL() override final;
+    virtual void renderGL() override final;
     void setAtoms(const QList<AtomInstance>& atoms);
-    void updateProjection();
-    void updateView();
+    virtual void updateProjection() override final;
+    virtual void updateView() override final;
 private:
     struct __attribute__((packed)) Color
     {

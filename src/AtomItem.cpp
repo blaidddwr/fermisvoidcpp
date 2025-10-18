@@ -1,14 +1,10 @@
 #include "AtomItem.h"
 #include "AtomRenderer.h"
+#include "Atoms.h"
 
-AtomItem::AtomItem(QObject *parent)
-    : QObject{parent}
+AtomItem::AtomItem(PortalItem *parent)
+    : OpenGLItem{parent}
 {}
-
-void AtomItem::sync(AtomRenderer& renderer)
-{
-    if (_atoms.updated()) renderer.setAtoms(_atoms.get());
-}
 
 void AtomItem::setAtom(int atomicNumber)
 {
@@ -19,9 +15,23 @@ void AtomItem::setAtom(int atomicNumber)
     }
     else
     {
+        Q_ASSERT(atomicNumber > 0);
+        Q_ASSERT(atomicNumber <= Atoms::instance().size());
         _atoms.set() = {{0,0,0,atomicNumber,false,false,false,false}};
         setRadius(0.8);
     }
+}
+
+OpenGLRenderer* AtomItem::_createRenderer() const
+{
+    return new AtomRenderer();
+}
+
+void AtomItem::_sync(OpenGLRenderer* renderer)
+{
+    auto ar = qobject_cast<AtomRenderer*>(renderer);
+    Q_ASSERT(ar);
+    if (_atoms.updated()) ar->setAtoms(_atoms.get());
 }
 
 void AtomItem::setRadius(qreal value)

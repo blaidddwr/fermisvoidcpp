@@ -3,7 +3,11 @@
 
 OpenGLRenderer::OpenGLRenderer(PortalRenderer* parent):
     QObject(parent)
-    ,_parent(parent)
+{}
+
+PortalRenderer* OpenGLRenderer::parent() const
 {
-    Q_ASSERT(parent);
+    auto ret = qobject_cast<PortalRenderer*>(QObject::parent());
+    Q_ASSERT(ret);
+    return ret;
 }

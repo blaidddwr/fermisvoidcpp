@@ -13,13 +13,13 @@ class WarpRenderer : public OpenGLRenderer
 public:
     explicit WarpRenderer(PortalRenderer* parent = nullptr);
     virtual ~WarpRenderer() override;
-    void initGL();
-    void renderGL();
+    virtual void initGL() override final;
+    virtual void renderGL() override final;
     void setColor(const QColor& value);
     void setEVColor(const QColor& value);
     void setRadius(const qreal& value);
-    void updateProjection();
-    void updateView();
+    virtual void updateProjection() override final;
+    virtual void updateView() override final;
 private:
     void initProgram();
     void initVertexArray();

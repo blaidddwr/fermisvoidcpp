@@ -17,6 +17,7 @@ SOURCES += \
         GObject.cpp \
         GameController.cpp \
         OpenGLBuffer.cpp \
+        OpenGLItem.cpp \
         OpenGLProgram.cpp \
         OpenGLRenderer.cpp \
         OpenGLShader.cpp \
@@ -50,6 +51,7 @@ HEADERS += \
     GameController.h \
     Latch.h \
     OpenGLBuffer.h \
+    OpenGLItem.h \
     OpenGLProgram.h \
     OpenGLRenderer.h \
     OpenGLShader.h \

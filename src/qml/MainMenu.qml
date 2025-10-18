@@ -42,5 +42,8 @@ Page {
             velocity: -1
             duration: 400
         }
+        ScriptAction {
+            script: mainPortal.clearActive()
+        }
     }
 }
