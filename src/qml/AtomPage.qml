@@ -5,7 +5,11 @@ import internal
 
 Page {
     id: root
-    StackView.onActivating: atomAnimation.start()
+    StackView.onActivating: {
+        mainPortal.atom.activate()
+        mainPortal.atom.setAtom(atomListView.currentAtomicNumber)
+        activationAnimation.start()
+    }
     StackView.onDeactivated: mainPortal.atom.setAtom(-1)
     header: Pane {
         RowLayout {
@@ -51,11 +55,11 @@ Page {
                 text += qsTr(", Charge %1").arg(atom.charge)
                 atomInfoLabel.text = text
             }
-            atomAnimation.restart()
+            atomChangeAnimation.restart()
         }
     }
     SequentialAnimation {
-        id: atomAnimation
+        id: atomChangeAnimation
         SmoothedAnimation {
             target: mainPortal
             property: "warp.radius"
@@ -64,17 +68,22 @@ Page {
             duration: 200
         }
         ScriptAction {
-            script: {
-                if (root.StackView.activating) mainPortal.atom.activate()
-                mainPortal.atom.setAtom(atomListView.currentAtomicNumber)
-            }
+            script:  mainPortal.atom.setAtom(atomListView.currentAtomicNumber)
         }
         SmoothedAnimation {
             target: mainPortal
             property: "warp.radius"
-            to: mainPortal.atom.radius
+            to: 1.0
             velocity: -1
             duration: 200
         }
+    }
+    SmoothedAnimation {
+        id: activationAnimation
+        target: mainPortal
+        property: "warp.radius"
+        to: 1.0
+        velocity: -1
+        duration: 400
     }
 }

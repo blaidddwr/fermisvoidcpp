@@ -37,10 +37,11 @@ QuickRenderer* PortalItem::createRenderer()
 
 void PortalItem::sync(QuickRenderer* renderer)
 {
+    auto active = _active.peek();
     auto pr = qobject_cast<PortalRenderer*>(renderer);
     Q_ASSERT(pr);
+    _warp->setActualRadius(active ? active->radius() : 0.0);
     _warp->sync(pr->warp());
-    auto active = _active.peek();
     if (_active.updated())
     {
         _active.get();

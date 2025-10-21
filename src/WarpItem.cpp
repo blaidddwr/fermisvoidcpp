@@ -5,6 +5,15 @@ WarpItem::WarpItem(QObject *parent)
     : QObject{parent}
 {}
 
+void WarpItem::setActualRadius(qreal value)
+{
+    if (_actualRadius.peek() != value)
+    {
+        _actualRadius = value;
+        emit actualRadiusChanged(value);
+    }
+}
+
 void WarpItem::setColor(const QColor& value)
 {
     if (_color.peek() != value)
@@ -36,5 +45,11 @@ void WarpItem::sync(WarpRenderer& renderer)
 {
     if (_color.updated()) renderer.setColor(_color.get());
     if (_evColor.updated()) renderer.setEVColor(_evColor.get());
-    if (_radius.updated()) renderer.setRadius(_radius.get());
+    if (
+        _radius.updated()
+        || _actualRadius.updated()
+        )
+    {
+        renderer.setRadius(_radius.get()*_actualRadius.get());
+    }
 }

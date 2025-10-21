@@ -33,12 +33,3 @@ void AtomItem::_sync(OpenGLRenderer* renderer)
     Q_ASSERT(ar);
     if (_atoms.updated()) ar->setAtoms(_atoms.get());
 }
-
-void AtomItem::setRadius(qreal value)
-{
-    if (_radius != value)
-    {
-        _radius = value;
-        emit radiusChanged(value);
-    }
-}

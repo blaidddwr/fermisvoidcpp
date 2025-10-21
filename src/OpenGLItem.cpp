@@ -23,3 +23,12 @@ void OpenGLItem::sync()
     Q_ASSERT(_renderer);
     _sync(_renderer);
 }
+
+void OpenGLItem::setRadius(qreal value)
+{
+    if (_radius != value)
+    {
+        _radius = value;
+        emit radiusChanged(value);
+    }
+}
