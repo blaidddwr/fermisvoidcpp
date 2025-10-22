@@ -37,9 +37,12 @@ QuickRenderer* PortalItem::createRenderer()
 
 void PortalItem::sync(QuickRenderer* renderer)
 {
+    static const QPointF defaultOffset {0.0,0.0};
     auto active = _active.peek();
     auto pr = qobject_cast<PortalRenderer*>(renderer);
     Q_ASSERT(pr);
+    pr->setScale(active ? active->scale() : 1.0);
+    pr->setOffset(active ? active->offset() : defaultOffset);
     _warp->setActualRadius(active ? active->radius() : 0.0);
     _warp->sync(pr->warp());
     if (_active.updated())

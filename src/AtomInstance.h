@@ -1,11 +1,12 @@
 #ifndef ATOMINSTANCE_H
 #define ATOMINSTANCE_H
+#include <Qt>
 
 struct AtomInstance
 {
     int x;
     int y;
-    float rotation;
+    qreal rotation;
     int atomicNumber;
     bool topBonded;
     bool rightBonded;

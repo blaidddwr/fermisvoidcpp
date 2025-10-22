@@ -18,6 +18,8 @@ public:
     const QMatrix4x4& view() const { return _view; }
     qreal scale() const { return _scale; }
     void setActive(OpenGLRenderer* renderer);
+    void setOffset(const QPointF& value);
+    void setScale(qreal value);
 protected:
     virtual void initGL() override final;
     virtual void paintGL() override final;
@@ -27,9 +29,11 @@ private:
     QList<OpenGLRenderer*> _renderers;
     QMatrix4x4 _projection;
     QMatrix4x4 _view;
+    QPointF _offset {0.0,0.0};
     SinesRenderer* _sines;
     WarpRenderer* _warp {nullptr};
     bool _updateProjection {true};
+    bool _updateView {true};
     qreal _scale {1.0};
 };
 

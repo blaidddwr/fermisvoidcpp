@@ -19,6 +19,24 @@ void PortalRenderer::setActive(OpenGLRenderer* renderer)
     _active = renderer;
 }
 
+void PortalRenderer::setOffset(const QPointF& value)
+{
+    if (_offset != value)
+    {
+        _offset = value;
+        _updateView = true;
+    }
+}
+
+void PortalRenderer::setScale(qreal value)
+{
+    if (_scale != value)
+    {
+        _scale = value;
+        _updateView = true;
+    }
+}
+
 void PortalRenderer::initGL()
 {
     _sines->initGL();
@@ -36,6 +54,15 @@ void PortalRenderer::paintGL()
     {
         _active.get();
         active->updateProjection();
+    }
+    if (_updateView)
+    {
+        _view = QMatrix4x4();
+        _view.scale(_scale);
+        _view.translate(-_offset.x(),-_offset.y());
+        _warp->updateView();
+        if (active) active->updateView();
+        _updateView = false;
     }
     if (_updateProjection)
     {

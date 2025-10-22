@@ -24,11 +24,29 @@ void OpenGLItem::sync()
     _sync(_renderer);
 }
 
+void OpenGLItem::setOffset(const QPointF& value)
+{
+    if (_offset != value)
+    {
+        _offset = value;
+        emit offsetChanged(value);
+    }
+}
+
 void OpenGLItem::setRadius(qreal value)
 {
     if (_radius != value)
     {
         _radius = value;
         emit radiusChanged(value);
+    }
+}
+
+void OpenGLItem::setScale(qreal value)
+{
+    if (_scale != value)
+    {
+        _scale = value;
+        emit scaleChanged(value);
     }
 }

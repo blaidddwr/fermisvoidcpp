@@ -3,7 +3,7 @@
 const float PI = 3.14159265358979323846;
 const float atomRadius = 0.1;
 const float atomFadeRadius = 0.2;
-const float bondLimitRadius = 0.51;
+const float bondLimitRadius = 0.5;
 const float bondMaxRadius = 1.0;
 
 in vec2 fPosition;

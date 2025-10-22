@@ -12,6 +12,8 @@ void AtomItem::setAtom(int atomicNumber)
     {
         _atoms.set() = {};
         setRadius(0.0);
+        setScale(1.0);
+        setOffset({0.0,0.0});
     }
     else
     {
@@ -19,6 +21,8 @@ void AtomItem::setAtom(int atomicNumber)
         Q_ASSERT(atomicNumber <= Atoms::instance().size());
         _atoms.set() = {{0,0,0,atomicNumber,false,false,false,false}};
         setRadius(0.8);
+        setScale(1.0);
+        setOffset({0.0,0.0});
     }
 }
 
