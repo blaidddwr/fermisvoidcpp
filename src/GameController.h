@@ -1,6 +1,7 @@
 #ifndef GAMECONTROLLER_H
 #define GAMECONTROLLER_H
 #include <QObject>
+//TODO: Remove, no longer needed
 
 class GameController : public QObject
 {

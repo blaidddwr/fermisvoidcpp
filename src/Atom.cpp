@@ -1,6 +1,15 @@
 #include "Atom.h"
 #include <QGuiApplication>
 
+bool Atom::canBond(Bond b0,Bond b1)
+{
+    return (
+        (b0 == Covalent && b1 == Covalent)
+        || (b0 == Positive && b1 == Negative)
+        || (b0 == Negative && b1 == Positive)
+        );
+}
+
 Atom::Atom(
     int atomicNumber
     ,qreal mass

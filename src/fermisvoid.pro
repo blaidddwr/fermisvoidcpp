@@ -16,6 +16,7 @@ SOURCES += \
         Clock.cpp \
         GObject.cpp \
         GameController.cpp \
+        Molecule.cpp \
         OpenGLBuffer.cpp \
         OpenGLItem.cpp \
         OpenGLProgram.cpp \
@@ -50,6 +51,7 @@ HEADERS += \
     GObject.h \
     GameController.h \
     Latch.h \
+    Molecule.h \
     OpenGLBuffer.h \
     OpenGLItem.h \
     OpenGLProgram.h \

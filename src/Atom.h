@@ -2,9 +2,11 @@
 #define ATOM_H
 #include "GObject.h"
 #include <QColor>
+//TODO: change this to value object(NOT qobject) because it is not unique
+//TODO: make AtomModel to expose an atom to QML (setAtomicNumber(int) to change it)
 
 /*
- * Mass is measured in Dalton(u).
+ * Mass is measured in dalton (u).
  */
 class Atom : public GObject
 {
@@ -26,6 +28,7 @@ public:
     Q_PROPERTY(int atomicNumber READ atomicNumber CONSTANT)
     Q_PROPERTY(int charge READ charge CONSTANT)
     Q_PROPERTY(qreal mass READ mass CONSTANT)
+    static bool canBond(Bond b0,Bond b1);
     Atom(
         int atomicNumber
         ,qreal mass

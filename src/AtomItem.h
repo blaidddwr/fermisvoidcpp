@@ -4,6 +4,7 @@
 #include "Latch.h"
 #include "OpenGLItem.h"
 class AtomRenderer;
+class Molecule;
 
 class AtomItem : public OpenGLItem
 {
@@ -11,6 +12,7 @@ class AtomItem : public OpenGLItem
 public:
     explicit AtomItem(PortalItem *parent = nullptr);
     Q_INVOKABLE void setAtom(int atomicNumber);
+    void setMolecule(const Molecule& molecule);
 signals:
     void radiusChanged(qreal value);
 protected:

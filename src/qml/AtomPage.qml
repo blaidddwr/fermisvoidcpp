@@ -52,7 +52,9 @@ Page {
                 var text = "";
                 text += qsTr("Atomic Number %1").arg(atom.atomicNumber)
                 text += qsTr(", Atomic Mass %1").arg(atom.mass.toFixed(4))
-                text += qsTr(", Charge %1").arg(atom.charge)
+                text += qsTr(", Charge %1%2").arg(atom.charge>0?"+":"").arg(atom.charge)
+                if (atom.solvent) text += qsTr(", Solvent")
+                if (atom.life) text += qsTr(", Life-Giving")
                 atomInfoLabel.text = text
             }
             atomChangeAnimation.restart()

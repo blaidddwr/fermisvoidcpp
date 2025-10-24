@@ -1,11 +1,12 @@
 #ifndef ATOMINSTANCE_H
 #define ATOMINSTANCE_H
 #include <Qt>
+//TODO: internalize this in the AtomItem class, remove rotation
 
 struct AtomInstance
 {
-    int x;
-    int y;
+    qreal x;
+    qreal y;
     qreal rotation;
     int atomicNumber;
     bool topBonded;

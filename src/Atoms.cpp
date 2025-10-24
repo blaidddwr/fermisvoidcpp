@@ -11,6 +11,26 @@ Atoms& Atoms::instance()
     return *_instance;
 }
 
+bool Atoms::canBond(int atomicNumber0,int atomicNumber1,Direction direction)
+{
+    if (atomicNumber1 == -1) return true;
+    const auto& a0 = get(atomicNumber0);
+    const auto& a1 = get(atomicNumber1);
+    switch (direction)
+    {
+    case Direction::Top:
+        return Atom::canBond(a0.topBond(),a1.bottomBond());
+    case Direction::Right:
+        return Atom::canBond(a0.rightBond(),a1.leftBond());
+    case Direction::Bottom:
+        return Atom::canBond(a0.bottomBond(),a1.topBond());
+    case Direction::Left:
+        return Atom::canBond(a0.leftBond(),a1.rightBond());
+    default:
+        return false;
+    }
+}
+
 const Atom& Atoms::get(int atomicNumber) const
 {
     Q_ASSERT(atomicNumber >= 1);

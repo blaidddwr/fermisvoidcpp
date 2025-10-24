@@ -1,5 +1,6 @@
 #include "Application.h"
 #include <QQmlApplicationEngine>
+//TODO: change all enums to class if possible
 
 int main(int argc,char** argv)
 {
