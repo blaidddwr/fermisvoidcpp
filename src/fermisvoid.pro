@@ -42,7 +42,6 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 HEADERS += \
     Application.h \
     Atom.h \
-    AtomInstance.h \
     AtomItem.h \
     AtomListModel.h \
     AtomRenderer.h \

@@ -70,17 +70,6 @@ Molecule& Molecule::operator=(Molecule&& other)
     return *this;
 }
 
-QHash<int,int> Molecule::atoms() const
-{
-    QHash<int,int> ret;
-    for (auto an: _atoms.values())
-    {
-        if (!ret.contains(an)) ret.insert(an,0);
-        ret[an]++;
-    }
-    return ret;
-}
-
 QList<int> Molecule::availableAtoms(const QPoint& position) const
 {
     QList<int> ret;
@@ -120,29 +109,45 @@ QList<QPoint> Molecule::availablePositions() const
 
 bool Molecule::addAtom(const QPoint& position,int atomicNumber)
 {
+    if (!canAddAtom(position,atomicNumber)) return false;
+    _atoms.insert(position,atomicNumber);
+    _molarMass += Atoms::instance().get(atomicNumber).mass();
+    update();
+    return true;
+}
+
+bool Molecule::canAddAtom(const QPoint& position,int atomicNumber) const
+{
     if (_atoms.contains(position)) return false;
     auto top = atom({position.x(),position.y()+1});
     auto right = atom({position.x()+1,position.y()});
     auto bottom = atom({position.x(),position.y()-1});
     auto left = atom({position.x()-1,position.y()});
     auto& atoms = Atoms::instance();
-    if (
-        !atoms.canBond(atomicNumber,top,Atoms::Direction::Top)
-        || !atoms.canBond(atomicNumber,right,Atoms::Direction::Right)
-        || !atoms.canBond(atomicNumber,bottom,Atoms::Direction::Bottom)
-        || !atoms.canBond(atomicNumber,left,Atoms::Direction::Left)
-        )
-    {
-        return false;
-    }
-    _atoms.insert(position,atomicNumber);
-    _molarMass += atoms.get(atomicNumber).mass();
-    update();
-    return true;
+    return (
+        atoms.canBond(atomicNumber,top,Atoms::Direction::Top)
+        && atoms.canBond(atomicNumber,right,Atoms::Direction::Right)
+        && atoms.canBond(atomicNumber,bottom,Atoms::Direction::Bottom)
+        && atoms.canBond(atomicNumber,left,Atoms::Direction::Left)
+        );
 }
 
 void Molecule::update()
 {
+    qreal x = 0.0;
+    qreal y = 0.0;
+    for (const auto& pos: _atoms.keys())
+    {
+        x += qreal(pos.x())/qreal(_atoms.size());
+        y += qreal(pos.y())/qreal(_atoms.size());
+    }
+    _center = {x,y};
+    _radius = 0.0;
+    for (const auto& pos: _atoms.keys())
+    {
+        _radius = fmax(_radius,(pos.x()*pos.x())+(pos.y()*pos.y()));
+    }
+    _radius = sqrt(_radius);
     _freezingPoint = FreezingPointA+(FreezingPointB*_molarMass);
     //TODO: liquid slope
 }

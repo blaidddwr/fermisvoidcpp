@@ -3,7 +3,7 @@
 #include "Latch.h"
 #include "OpenGLProgram.h"
 #include "OpenGLRenderer.h"
-#include "AtomInstance.h"
+#include <QPointF>
 class OpenGLBuffer;
 class OpenGLVertexArray;
 
@@ -16,7 +16,7 @@ public:
     virtual ~AtomRenderer() override;
     virtual void initGL() override final;
     virtual void renderGL() override final;
-    void setAtoms(const QList<AtomInstance>& atoms);
+    void setAtoms(const QHash<QPoint,int>& atoms);
     virtual void updateProjection() override final;
     virtual void updateView() override final;
 private:
@@ -29,7 +29,6 @@ private:
     };
     struct __attribute__((packed)) AtomBuffer
     {
-        float rotation;
         float x;
         float y;
         Color atomColor;
@@ -40,12 +39,14 @@ private:
     };
     void initProgram();
     void initVertexArray();
+    void updateAtoms();
     constexpr static int SpikeTextureIndex {0};
     AtomBuffer _atomBuffer[MaxInstanceSize];
-    Latch<qsizetype> _atomSize;
+    Latch<QHash<QPoint,int>> _atoms;
     OpenGLBuffer* _arrayBuffer {nullptr};
     OpenGLBuffer* _instancedBuffer {nullptr};
     OpenGLProgram* _program {nullptr};
+    OpenGLProgram::Uniform _atomsCenterUniform;
     OpenGLProgram::Uniform _projectionUniform;
     OpenGLProgram::Uniform _viewUniform;
     OpenGLVertexArray* _vertexArray {nullptr};

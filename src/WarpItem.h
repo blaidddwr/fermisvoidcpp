@@ -4,6 +4,11 @@
 #include <QColor>
 #include <QObject>
 class WarpRenderer;
+//TODO: Transform this into the main menu renderer, separate the warp renderer into its own thing
+// because it will be reused for other renderers (like the atom renderer)
+//TODO: Make a new transition renderer that is used for transitioning between renderers, this will
+//expose itself to QML so it can be used to be in sync with new QML page transitions on the main
+//stack view
 
 class WarpItem : public QObject
 {

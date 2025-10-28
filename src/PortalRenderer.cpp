@@ -58,7 +58,7 @@ void PortalRenderer::paintGL()
     if (_updateView)
     {
         _view = QMatrix4x4();
-        _view.scale(_scale);
+        _view.scale(1.0/_scale);
         _view.translate(-_offset.x(),-_offset.y());
         _warp->updateView();
         if (active) active->updateView();

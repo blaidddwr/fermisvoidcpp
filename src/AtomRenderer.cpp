@@ -39,7 +39,7 @@ void AtomRenderer::initGL()
 
 void AtomRenderer::renderGL()
 {
-    if (_atomSize.peek())
+    if (!_atoms.peek().isEmpty())
     {
         parent()->sines().spikeTexture().bind(SpikeTextureIndex);
         _program->use();
@@ -53,44 +53,17 @@ void AtomRenderer::renderGL()
             _projectionUniform.setMatrix4fv(parent()->projection());
             _updateProjection = false;
         }
-        if (_atomSize.updated())
-        {
-            auto size = _atomSize.get();
-            _instancedBuffer->write(0,sizeof(AtomBuffer)*size,_atomBuffer);
-        }
+        if (_atoms.updated()) updateAtoms();
         _vertexArray->bind();
-        _vertexArray->drawInstanced(_atomSize.peek());
+        _vertexArray->drawInstanced(_atoms.peek().size());
         _vertexArray->release();
         _program->release();
     }
 }
 
-void AtomRenderer::setAtoms(const QList<AtomInstance>& atoms)
+void AtomRenderer::setAtoms(const QHash<QPoint,int>& atoms)
 {
-    static const quint32 POSITIVE = 0;
-    static const quint32 NEGATIVE = 1;
-    static const quint32 COVALENT = 2;
-    Q_ASSERT(POSITIVE == Atom::Bond::Positive);
-    Q_ASSERT(NEGATIVE == Atom::Bond::Negative);
-    Q_ASSERT(COVALENT == Atom::Bond::Covalent);
-    Q_ASSERT(atoms.size() <= MaxInstanceSize);
-    _atomSize.set() = atoms.size();
-    for (int i = 0;i < atoms.size();i++)
-    {
-        const auto& ai = atoms[i];
-        Q_ASSERT(ai.atomicNumber > 0);
-        Q_ASSERT(ai.atomicNumber <= Atoms::instance().size());
-        const auto& atom = Atoms::instance().get(ai.atomicNumber);
-        auto& atomBuffer = _atomBuffer[i];
-        atomBuffer.rotation = ai.rotation;
-        atomBuffer.x = ai.x;
-        atomBuffer.y = ai.y;
-        atomBuffer.atomColor = atom.color();
-        atomBuffer.topBond = atom.topBond()+(ai.topBonded?4:0);
-        atomBuffer.rightBond = atom.rightBond()+(ai.rightBonded?4:0);
-        atomBuffer.bottomBond = atom.bottomBond()+(ai.bottomBonded?4:0);
-        atomBuffer.leftBond = atom.leftBond()+(ai.leftBonded?4:0);
-    }
+    _atoms.set() = atoms;
 }
 
 void AtomRenderer::updateProjection()
@@ -127,8 +100,40 @@ void AtomRenderer::initVertexArray()
     _vertexArray->add(_program->location("position"),2,GL_FLOAT,8,0);
     _instancedBuffer = new OpenGLBuffer(sizeof(AtomBuffer)*MaxInstanceSize,GL_DYNAMIC_DRAW);
     _instancedBuffer->bind(GL_ARRAY_BUFFER);
-    _vertexArray->add(_program->location("rotation"),1,GL_FLOAT,40,0,1);
-    _vertexArray->add(_program->location("atomOffset"),2,GL_FLOAT,40,4,1);
-    _vertexArray->add(_program->location("atomColor"),3,GL_FLOAT,40,12,1);
-    _vertexArray->add(_program->location("bonds"),4,GL_UNSIGNED_INT,40,24,1);
+    _vertexArray->add(_program->location("atomOffset"),2,GL_FLOAT,36,0,1);
+    _vertexArray->add(_program->location("atomColor"),3,GL_FLOAT,36,8,1);
+    _vertexArray->add(_program->location("bonds"),4,GL_UNSIGNED_INT,36,20,1);
+}
+
+void AtomRenderer::updateAtoms()
+{
+    const auto& atoms = _atoms.get();
+    Q_ASSERT(atoms.size() <= MaxInstanceSize);
+    static const quint32 POSITIVE = 0;
+    static const quint32 NEGATIVE = 1;
+    static const quint32 COVALENT = 2;
+    Q_ASSERT(POSITIVE == Atom::Bond::Positive);
+    Q_ASSERT(NEGATIVE == Atom::Bond::Negative);
+    Q_ASSERT(COVALENT == Atom::Bond::Covalent);
+    Q_ASSERT(atoms.size() <= MaxInstanceSize);
+    int c = 0;
+    for (auto i = atoms.begin();i != atoms.end();i++)
+    {
+        auto x = i.key().x();
+        auto y = i.key().y();
+        auto an = i.value();
+        Q_ASSERT(an > 0);
+        Q_ASSERT(an <= Atoms::instance().size());
+        const auto& atom = Atoms::instance().get(an);
+        auto& atomBuffer = _atomBuffer[c];
+        atomBuffer.x = x;
+        atomBuffer.y = y;
+        atomBuffer.atomColor = atom.color();
+        atomBuffer.topBond = atom.topBond()+(atoms.contains({x,y+1})?4:0);
+        atomBuffer.rightBond = atom.rightBond()+(atoms.contains({x+1,y})?4:0);
+        atomBuffer.bottomBond = atom.bottomBond()+(atoms.contains({x,y-1})?4:0);
+        atomBuffer.leftBond = atom.leftBond()+(atoms.contains({x-1,y})?4:0);
+        c++;
+    }
+    _instancedBuffer->write(0,sizeof(AtomBuffer)*atoms.size(),_atomBuffer);
 }

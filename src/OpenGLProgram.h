@@ -12,6 +12,7 @@ public:
         Uniform() = default;
         Uniform(OpenGLProgram* program,GLint index);
         void set1f(float v0);
+        void set2f(const QPointF& point);
         void set1i(int v0);
         void set3f(float v0,float v1,float v2);
         void setColor3f(const QColor& color);

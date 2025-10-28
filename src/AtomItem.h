@@ -1,8 +1,8 @@
 #ifndef ATOMITEM_H
 #define ATOMITEM_H
-#include "AtomInstance.h"
 #include "Latch.h"
 #include "OpenGLItem.h"
+#include <QHash>
 class AtomRenderer;
 class Molecule;
 
@@ -19,7 +19,7 @@ protected:
     virtual OpenGLRenderer* _createRenderer() const override final;
     virtual void _sync(OpenGLRenderer* renderer) override final;
 private:
-    Latch<QList<AtomInstance>> _atoms;
+    Latch<QHash<QPoint,int>> _atoms;
 };
 
 #endif

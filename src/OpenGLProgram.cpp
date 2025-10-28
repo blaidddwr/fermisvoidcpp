@@ -15,6 +15,11 @@ void OpenGLProgram::Uniform::set1f(float v0)
     _p->glUniform1f(_index,v0);
 }
 
+void OpenGLProgram::Uniform::set2f(const QPointF& point)
+{
+    _p->glUniform2f(_index,point.x(),point.y());
+}
+
 void OpenGLProgram::Uniform::set1i(int v0)
 {
     _p->glUniform1i(_index,v0);

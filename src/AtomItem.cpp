@@ -20,7 +20,7 @@ void AtomItem::setAtom(int atomicNumber)
     {
         Q_ASSERT(atomicNumber > 0);
         Q_ASSERT(atomicNumber <= Atoms::instance().size());
-        _atoms.set() = {{0,0,0,atomicNumber,false,false,false,false}};
+        _atoms.set() = {{{0,0},atomicNumber}};
         setRadius(0.8);
         setScale(1.0);
         setOffset({0.0,0.0});
@@ -34,39 +34,10 @@ void AtomItem::setMolecule(const Molecule& molecule)
         setAtom(-1);
         return;
     }
-    QList<AtomInstance> atoms;
-    const auto posns = molecule.positions();
-    qreal x = 0.0;
-    qreal y = 0.0;
-    for (auto pos: posns)
-    {
-        x += qreal(pos.x())/qreal(posns.size());
-        y += qreal(pos.y())/qreal(posns.size());
-        atoms.append(
-            {
-                qreal(pos.x())
-                ,qreal(pos.y())
-                ,0.0
-                ,molecule.atom(pos)
-                ,posns.contains({pos.x(),pos.y()+1})
-                ,posns.contains({pos.x()+1,pos.y()})
-                ,posns.contains({pos.x(),pos.y()-1})
-                ,posns.contains({pos.x()-1,pos.y()})
-            }
-        );
-    }
-    qreal distance = 0.0;
-    for (auto& a: atoms)
-    {
-        a.x -= x;
-        a.y -= y;
-        distance = fmax(distance,(a.x*a.x)+(a.y*a.y));
-    }
-    distance = sqrt(distance);
-    _atoms.set() = atoms;
-    setRadius(distance+0.8);
-    setScale(0.8/(distance+0.8));
-    setOffset({0.0,0.0});
+    _atoms.set() = molecule.atoms();
+    setRadius(molecule.radius()+0.8);
+    setScale((molecule.radius()+0.8)/0.8);
+    setOffset(molecule.center());
 }
 
 OpenGLRenderer* AtomItem::_createRenderer() const

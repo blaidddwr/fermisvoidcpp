@@ -7,46 +7,32 @@ ListView {
     Control { id: control }
     property real horizontalPadding: 12
     property real verticalPadding: 6
-    property real borderWidth: 6
+    property real indentWidth: 12
     readonly property int currentAtomicNumber: currentIndex === -1 ? -1 : currentIndex+1
     id: root
     model: AtomListModel {}
-    implicitWidth: control.font.pointSize*16+(2*(horizontalPadding+borderWidth))+15
+    implicitWidth: (control.font.pointSize*16)+(2*horizontalPadding)+indentWidth+15
     spacing: 6
     delegate: Item {
+        x: ListView.isCurrentItem ? root.indentWidth : 0
         id: delegate
-        property real borderWidth: ListView.isCurrentItem ? root.borderWidth : 0
-        Behavior on borderWidth {
+        Behavior on x {
             SmoothedAnimation {
                 velocity: -1
                 duration: 400
             }
         }
-        implicitWidth: rowLayout.implicitWidth+(2*(root.horizontalPadding+borderWidth))
+        implicitWidth: rowLayout.implicitWidth+(2*root.horizontalPadding)
         implicitHeight: rowLayout.implicitHeight+(2*root.verticalPadding)
         Rectangle {
             anchors.fill: parent
-            color: control.palette.dark
-            opacity: 0.5
+            color: delegate.ListView.isCurrentItem ? control.palette.light : control.palette.dark
+            opacity: delegate.ListView.isCurrentItem ? 0.3 : 0.5
         }
         Rectangle {
             anchors.fill: parent
             color: control.palette.light
             opacity: mouseArea.pressed ? 0.3 : mouseArea.containsMouse ? 0.2 : 0.0
-        }
-        Rectangle {
-            anchors.top: parent.top
-            anchors.right: parent.right
-            anchors.bottom: parent.bottom
-            width: delegate.borderWidth/2
-            color: control.palette.light
-        }
-        Rectangle {
-            anchors.top: parent.top
-            anchors.left: parent.left
-            anchors.bottom: parent.bottom
-            width: delegate.borderWidth/2
-            color: control.palette.light
         }
         RowLayout {
             id: rowLayout
