@@ -2,7 +2,7 @@
 #include "WarpRenderer.h"
 
 WarpItem::WarpItem(QObject *parent)
-    : QObject{parent}
+    : QObject(parent)
 {}
 
 void WarpItem::setActualRadius(qreal value)

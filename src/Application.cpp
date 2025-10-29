@@ -1,8 +1,8 @@
 #include "Application.h"
-#include "Atom.h"
 #include "AtomItem.h"
 #include "AtomListModel.h"
-#include "GameController.h"
+#include "AtomModel.h"
+#include "AtomController.h"
 #include "PortalItem.h"
 #include "WarpItem.h"
 #include <QQuickView>
@@ -19,10 +19,10 @@ Application::Application(int& argc,char** argv):
     format.setProfile(QSurfaceFormat::CoreProfile);
     format.setSwapBehavior(QSurfaceFormat::DoubleBuffer);
     QSurfaceFormat::setDefaultFormat(format);
-    qmlRegisterSingletonInstance("internal",1,0,"Game",&GameController::instance());
     qmlRegisterType<PortalItem>("internal",1,0,"Portal");
+    qmlRegisterType<AtomController>("internal",1,0,"AtomController");
     qmlRegisterType<AtomListModel>("internal",1,0,"AtomListModel");
-    qmlRegisterUncreatableType<WarpItem>("internal",1,0,"WarpItem",tr("Internal Item"));
-    qmlRegisterUncreatableType<AtomItem>("internal",1,0,"AtomItem",tr("Internal Item"));
-    qmlRegisterUncreatableType<Atom>("internal",1,0,"Atom",tr("Internal Model"));
+    qmlRegisterType<AtomModel>("internal",1,0,"AtomModel");
+    qmlRegisterUncreatableType<WarpItem>("internal",1,0,"Warp",tr("Internal Item"));
+    qmlRegisterUncreatableType<AtomItem>("internal",1,0,"Atom",tr("Internal Item"));
 }

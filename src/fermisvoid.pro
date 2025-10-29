@@ -9,13 +9,14 @@ CONFIG += c++20
 SOURCES += \
         Application.cpp \
         Atom.cpp \
+        AtomController.cpp \
         AtomItem.cpp \
         AtomListModel.cpp \
+        AtomModel.cpp \
         AtomRenderer.cpp \
         Atoms.cpp \
         Clock.cpp \
         GObject.cpp \
-        GameController.cpp \
         Molecule.cpp \
         OpenGLBuffer.cpp \
         OpenGLItem.cpp \
@@ -42,13 +43,14 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 HEADERS += \
     Application.h \
     Atom.h \
+    AtomController.h \
     AtomItem.h \
     AtomListModel.h \
+    AtomModel.h \
     AtomRenderer.h \
     Atoms.h \
     Clock.h \
     GObject.h \
-    GameController.h \
     Latch.h \
     Molecule.h \
     OpenGLBuffer.h \

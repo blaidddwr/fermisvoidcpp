@@ -1,5 +1,4 @@
 #include "Atom.h"
-#include <QGuiApplication>
 
 bool Atom::canBond(Bond b0,Bond b1)
 {
@@ -18,10 +17,8 @@ Atom::Atom(
     ,Bond rightBond
     ,Bond bottomBond
     ,Bond leftBond
-    ,QObject* parent
     ):
-    GObject(parent)
-    ,_topBond(topBond)
+    _topBond(topBond)
     ,_rightBond(rightBond)
     ,_bottomBond(bottomBond)
     ,_leftBond(leftBond)
@@ -30,21 +27,6 @@ Atom::Atom(
     ,_mass(mass)
 {
     Q_ASSERT(atomicNumber >= 1);
-}
-
-bool Atom::life() const
-{
-    return (
-        _topBond == Covalent
-        && _rightBond == Covalent
-        && _bottomBond == Covalent
-        && _leftBond == Covalent
-        );
-}
-
-bool Atom::solvent() const
-{
-    return abs(charge()) == 4;
 }
 
 int Atom::charge() const

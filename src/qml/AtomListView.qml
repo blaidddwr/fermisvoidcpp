@@ -1,16 +1,16 @@
 import "Fermi"
 import QtQuick
 import QtQuick.Layouts
-import internal
 
 ListView {
     Control { id: control }
     property real horizontalPadding: 12
     property real verticalPadding: 6
     property real indentWidth: 12
-    readonly property int currentAtomicNumber: currentIndex === -1 ? -1 : currentIndex+1
+    readonly property int currentAtomicNumber: {
+        currentIndex === -1 ? -1 : model ? model.atomicNumber(currentIndex) : -1
+    }
     id: root
-    model: AtomListModel {}
     implicitWidth: (control.font.pointSize*16)+(2*horizontalPadding)+indentWidth+15
     spacing: 6
     delegate: Item {

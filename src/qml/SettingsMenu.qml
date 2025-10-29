@@ -3,6 +3,7 @@ import QtQuick
 import QtQuick.Layouts
 
 Page {
+    id: root
     header: Pane {
         Label {
             anchors.centerIn: parent
@@ -15,7 +16,7 @@ Page {
             ColumnLayout {
                 Button {
                     text: "Back"
-                    onClicked: mainStackView.pop()
+                    onClicked: root.StackView.view.pop()
                 }
             }
         }

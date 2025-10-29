@@ -1,6 +1,5 @@
 #ifndef ATOMLISTMODEL_H
 #define ATOMLISTMODEL_H
-#include "Atom.h"
 #include <QAbstractListModel>
 //TODO: rename this to AtomsModel, because it shows all atoms
 //TODO: move generateAtoms to this as invokable
@@ -16,14 +15,19 @@ public:
         ,ColorRole
         ,BondsRole
     };
-    AtomListModel();
-    Q_INVOKABLE const Atom* getAtom(int atomicNumber) const;
+    Q_PROPERTY(QList<int> atoms READ atoms WRITE setAtoms NOTIFY atomsChanged)
+    AtomListModel(QObject* parent = nullptr);
+    AtomListModel(const QList<int>& atoms,QObject* parent = nullptr);
+    Q_INVOKABLE int atomicNumber(int row) const;
+    const QList<int>& atoms() const { return _atoms; }
     virtual QHash<int,QByteArray> roleNames() const override final;
     virtual QVariant data(const QModelIndex& index,int role=Qt::DisplayRole) const override final;
     virtual int rowCount(const QModelIndex& parent = QModelIndex()) const override final;
-private slots:
-    void onAtomsAboutToReset();
-    void onAtomsReset();
+    void setAtoms(const QList<int>& atoms);
+signals:
+    void atomsChanged(const QList<int>& atoms);
+private:
+    QList<int> _atoms;
 };
 
 #endif

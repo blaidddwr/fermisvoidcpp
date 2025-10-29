@@ -11,6 +11,11 @@ Atoms& Atoms::instance()
     return *_instance;
 }
 
+Atoms::~Atoms()
+{
+    qDeleteAll(_atoms);
+}
+
 bool Atoms::canBond(int atomicNumber0,int atomicNumber1,Direction direction)
 {
     if (atomicNumber1 == -1) return true;
@@ -63,7 +68,6 @@ void Atoms::generateAtoms(int seed)
             ,static_cast<Atom::Bond>(bond(gen))
             ,static_cast<Atom::Bond>(bond(gen))
             ,static_cast<Atom::Bond>(bond(gen))
-            ,this
             );
     }
     emit atomsReset();

@@ -4,6 +4,7 @@ import QtQuick.Layouts
 import internal
 
 Page {
+    id: root
     StackView.onActivating: activationAnimation.start()
     header: Pane {
         Label {
@@ -16,15 +17,16 @@ Page {
         Frame {
             ColumnLayout {
                 Button {
+                    AtomController { id: atomController }
                     text: "Atoms"
                     onClicked: {
-                        Game.start()
-                        mainStackView.push("AtomPage.qml")
+                        atomController.generateAtoms()
+                        root.StackView.view.push("AtomPage.qml")
                     }
                 }
                 Button {
                     text: "Settings"
-                    onClicked: mainStackView.push("SettingsMenu.qml")
+                    onClicked: root.StackView.view.push("SettingsMenu.qml")
                 }
                 Button {
                     text: "Exit"

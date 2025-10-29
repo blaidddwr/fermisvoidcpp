@@ -14,6 +14,7 @@ public:
         ,Left
     };
     static Atoms& instance();
+    virtual ~Atoms() override;
     bool canBond(int atomicNumber0,int atomicNumber1,Direction direction);
     const Atom& get(int atomicNumber) const;
     int size() const { return _atoms.size(); }

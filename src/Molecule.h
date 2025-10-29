@@ -6,7 +6,7 @@
 //TODO: make AtomListModel(which will be property of MoleculeModel) that lists the atoms of a molecule
 
 /*
- * Molar mass is measured in grams (g).
+ * Molar mass is measured in grams per mole (g/mol).
  * Freezing point is measured in kelvin (K).
  * Liquid slope is measured in kelvin over pascals (K/Pa).
  */

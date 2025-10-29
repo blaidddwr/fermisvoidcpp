@@ -33,7 +33,7 @@ Page {
             }
             Button {
                 text: "Back"
-                onClicked: mainStackView.pop()
+                onClicked: root.StackView.view.pop()
             }
         }
     }
@@ -43,21 +43,22 @@ Page {
         anchors.left: parent.left
         anchors.bottom: parent.bottom
         anchors.margins: 5
+        model: AtomListModel {}
         clip: true
-        onCurrentAtomicNumberChanged: {
-            if (currentAtomicNumber === -1) atomInfoLabel.text = ""
-            else
-            {
-                var atom = model.getAtom(currentAtomicNumber)
-                var text = "";
-                text += qsTr("Atomic Number %1").arg(atom.atomicNumber)
-                text += qsTr(", Atomic Mass %1").arg(atom.mass.toFixed(4))
-                text += qsTr(", Charge %1%2").arg(atom.charge>0?"+":"").arg(atom.charge)
-                if (atom.solvent) text += qsTr(", Solvent")
-                if (atom.life) text += qsTr(", Life-Giving")
-                atomInfoLabel.text = text
+        AtomModel {
+            atomicNumber: atomListView.currentAtomicNumber
+            onAtomicNumberChanged: {
+                if (atomicNumber === -1) atomInfoLabel.text = ""
+                else
+                {
+                    var text = "";
+                    text += qsTr("Atomic Number %1").arg(atomicNumber)
+                    text += qsTr(", Atomic Mass %1").arg(mass.toFixed(4))
+                    text += qsTr(", Charge %1%2").arg(charge>0?"+":"").arg(charge)
+                    atomInfoLabel.text = text
+                }
+                atomChangeAnimation.restart()
             }
-            atomChangeAnimation.restart()
         }
     }
     SequentialAnimation {
