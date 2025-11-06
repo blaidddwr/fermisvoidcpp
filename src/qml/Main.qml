@@ -13,10 +13,6 @@ ApplicationWindow {
         dark: "#000000"
     }
     title: qsTr("Fermi's Void")
-    Component.onCompleted: {
-        MenuScene.color = "#3e009c"
-        MenuScene.evColor = "#6600ff"
-    }
     Portal {
         id: mainPortal
         anchors.fill: parent

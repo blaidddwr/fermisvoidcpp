@@ -3,10 +3,16 @@ import QtQuick
 import QtQuick.Layouts
 import internal
 
-Page {
+ScenePage {
     id: root
-    StackView.onActivated: MenuScene.activate()
-    StackView.onDeactivated: MenuScene.deactivate()
+    onActivated: MenuScene.activate()
+    onDeactivated: MenuScene.deactivate()
+    Component.onCompleted: {
+        TransitionScene.color = "#4b2ade"
+        MenuScene.color = "#3e009c"
+        MenuScene.evColor = "#6600ff"
+        MenuScene.activate()
+    }
     header: Pane {
         Label {
             anchors.centerIn: parent
@@ -34,19 +40,6 @@ Page {
                     onClicked: mainWindow.close()
                 }
             }
-        }
-    }
-    SequentialAnimation {
-        id: activationAnimation
-        SmoothedAnimation {
-            target: mainPortal
-            property: "warp.radius"
-            to: 0.0
-            velocity: -1
-            duration: 400
-        }
-        ScriptAction {
-            script: mainPortal.clearActive()
         }
     }
 }

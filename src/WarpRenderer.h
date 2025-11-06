@@ -35,7 +35,6 @@ private:
     OpenGLProgram::Uniform _modelUniform;
     OpenGLProgram::Uniform _projectionUniform;
     OpenGLProgram::Uniform _radiusUniform;
-    OpenGLProgram::Uniform _scaleUniform;
     OpenGLProgram::Uniform _viewUniform;
     OpenGLVertexArray* _vertexArray {nullptr};
 };

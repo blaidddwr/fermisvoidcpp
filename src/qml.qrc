@@ -12,5 +12,7 @@
         <file>qml/Fermi/Frame.qml</file>
         <file>qml/AtomListView.qml</file>
         <file>qml/Fermi/Page.qml</file>
+        <file>qml/Fermi/StackView.qml</file>
+        <file>qml/ScenePage.qml</file>
     </qresource>
 </RCC>

@@ -7,3 +7,4 @@ Frame 1.0 Frame.qml
 Label 1.0 Label.qml
 Page 1.0 Page.qml
 Pane 1.0 Pane.qml
+StackView 1.0 StackView.qml

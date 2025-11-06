@@ -3,13 +3,10 @@ import QtQuick
 import QtQuick.Layouts
 import internal
 
-Page {
+ScenePage {
     id: root
-    StackView.onActivated: {
-        AtomScene.activate()
-        AtomScene.atomicNumber = atomListView.currentAtomicNumber
-    }
-    StackView.onDeactivated: AtomScene.deactivate()
+    onActivated: AtomScene.activate()
+    onDeactivated: AtomScene.deactivate()
     header: Pane {
         RowLayout {
             anchors.fill: parent

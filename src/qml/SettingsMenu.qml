@@ -3,10 +3,10 @@ import QtQuick
 import QtQuick.Layouts
 import internal
 
-Page {
+ScenePage {
     id: root
-    StackView.onActivated: MenuScene.activate()
-    StackView.onDeactivated: MenuScene.deactivate()
+    onActivated: MenuScene.activate()
+    onDeactivated: MenuScene.deactivate()
     header: Pane {
         Label {
             anchors.centerIn: parent

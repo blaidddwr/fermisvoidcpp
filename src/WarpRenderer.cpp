@@ -25,19 +25,10 @@ void WarpRenderer::renderGL()
         updateMVP();
     }
     if (_color.updated()) _colorUniform.setColor3f(_color.get());
-    if (_evColor.updated())_evColorUniform.setColor3f(_evColor.get());
-    if (_radius.updated())_radiusUniform.set1f(_radius.get());
+    if (_evColor.updated()) _evColorUniform.setColor3f(_evColor.get());
+    if (_radius.updated()) _radiusUniform.set1f(_radius.get());
     _vertexArray->bind();
     _vertexArray->draw();
-    _vertexArray->release();
-    _program->release();
-}
-
-void WarpRenderer::initGL()
-{
-    initializeOpenGLFunctions();
-    initProgram();
-    initVertexArray();
     _vertexArray->release();
     _program->release();
 }
@@ -55,6 +46,15 @@ void WarpRenderer::setEVColor(const QColor& value)
 void WarpRenderer::setRadius(const qreal& value)
 {
     _radius = value;
+}
+
+void WarpRenderer::initGL()
+{
+    initializeOpenGLFunctions();
+    initProgram();
+    initVertexArray();
+    _vertexArray->release();
+    _program->release();
 }
 
 void WarpRenderer::initProgram()

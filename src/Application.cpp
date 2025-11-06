@@ -7,6 +7,8 @@
 #include "MenuScene.h"
 #include "PortalItem.h"
 #include "SinesRenderer.h"
+#include "TransitionRenderer.h"
+#include "TransitionScene.h"
 #include "WarpRenderer.h"
 #include <QQuickView>
 #include <QSGRendererInterface>
@@ -26,6 +28,7 @@ Application::Application(int& argc,char** argv):
     qmlRegisterType<AtomController>("internal",1,0,"AtomController");
     qmlRegisterType<AtomListModel>("internal",1,0,"AtomListModel");
     qmlRegisterType<AtomModel>("internal",1,0,"AtomModel");
+    qmlRegisterSingletonInstance("internal",1,0,"TransitionScene",&TransitionScene::instance());
     qmlRegisterSingletonInstance("internal",1,0,"MenuScene",&MenuScene::instance());
     qmlRegisterSingletonInstance("internal",1,0,"AtomScene",&AtomScene::instance());
 }
@@ -43,6 +46,7 @@ void Application::onPortalRendererCreated(PortalRenderer* renderer)
 {
     SinesRenderer::create(renderer);
     WarpRenderer::create(renderer);
+    TransitionRenderer::create(renderer);
     AtomRenderer::create(renderer);
     SinesRenderer::instance().use();
 }

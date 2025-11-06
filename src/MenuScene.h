@@ -3,7 +3,6 @@
 #include "GameScene.h"
 #include "Latch.h"
 #include <QColor>
-#include <QObject>
 class WarpRenderer;
 
 class MenuScene : public GameScene

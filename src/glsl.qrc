@@ -5,5 +5,7 @@
         <file>glsl/atom.v.glsl</file>
         <file>glsl/atom.f.glsl</file>
         <file>glsl/sines.c.glsl</file>
+        <file>glsl/transition.f.glsl</file>
+        <file>glsl/transition.v.glsl</file>
     </qresource>
 </RCC>

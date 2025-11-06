@@ -32,6 +32,8 @@ SOURCES += \
         QuickItem.cpp \
         QuickRenderer.cpp \
         SinesRenderer.cpp \
+        TransitionRenderer.cpp \
+        TransitionScene.cpp \
         WarpRenderer.cpp \
         main.cpp
 
@@ -67,6 +69,8 @@ HEADERS += \
     QuickItem.h \
     QuickRenderer.h \
     SinesRenderer.h \
+    TransitionRenderer.h \
+    TransitionScene.h \
     WarpRenderer.h \
     singleton.h
 

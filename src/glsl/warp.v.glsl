@@ -10,7 +10,7 @@ out vec2 fPosition;
 
 void main()
 {
-    vec4 mp = model*vec4(position,1.0,1.0);
+    vec4 mp = model*vec4(position,0.99,1.0);
     gl_Position = projection*view*mp;
     fPosition = mp.xy;
 }
