@@ -6,10 +6,6 @@
 #include "SinesRenderer.h"
 #include "WarpRenderer.h"
 
-WarpRenderer::WarpRenderer(PortalRenderer* parent):
-    OpenGLRenderer(parent)
-{}
-
 WarpRenderer::~WarpRenderer()
 {
     delete _vertexArray;
@@ -17,25 +13,31 @@ WarpRenderer::~WarpRenderer()
     delete _program;
 }
 
+void WarpRenderer::renderGL()
+{
+    SinesRenderer::instance().smoothTexture().bind(SmoothTextureIndex);
+    _program->use();
+    if (
+        viewUpdated()
+        || projectionUpdated()
+    )
+    {
+        updateMVP();
+    }
+    if (_color.updated()) _colorUniform.setColor3f(_color.get());
+    if (_evColor.updated())_evColorUniform.setColor3f(_evColor.get());
+    if (_radius.updated())_radiusUniform.set1f(_radius.get());
+    _vertexArray->bind();
+    _vertexArray->draw();
+    _vertexArray->release();
+    _program->release();
+}
+
 void WarpRenderer::initGL()
 {
     initializeOpenGLFunctions();
     initProgram();
     initVertexArray();
-    _vertexArray->release();
-    _program->release();
-}
-
-void WarpRenderer::renderGL()
-{
-    parent()->sines().smoothTexture().bind(0);
-    _program->use();
-    if (_updateModel) updateMVP();
-    if (_color.updated()) _colorUniform.setColor3f(_color.get());
-    if (_evColor.updated()) _evColorUniform.setColor3f(_evColor.get());
-    if (_radius.updated()) _radiusUniform.set1f(_radius.get());
-    _vertexArray->bind();
-    _vertexArray->draw();
     _vertexArray->release();
     _program->release();
 }
@@ -55,16 +57,6 @@ void WarpRenderer::setRadius(const qreal& value)
     _radius = value;
 }
 
-void WarpRenderer::updateProjection()
-{
-    _updateModel = true;
-}
-
-void WarpRenderer::updateView()
-{
-    _updateModel = true;
-}
-
 void WarpRenderer::initProgram()
 {
     auto vertex = OpenGLShader::fromFile(":/glsl/warp.v.glsl",GL_VERTEX_SHADER);
@@ -73,10 +65,10 @@ void WarpRenderer::initProgram()
     _modelUniform = _program->uniform("model");
     _viewUniform = _program->uniform("view");
     _projectionUniform = _program->uniform("projection");
-    _scaleUniform = _program->uniform("scale");
     _colorUniform = _program->uniform("wColor");
     _evColorUniform = _program->uniform("evColor");
     _radiusUniform = _program->uniform("evRadius");
+    _program->uniform("smoothTexture").set1i(SmoothTextureIndex);
 }
 
 void WarpRenderer::initVertexArray()
@@ -96,12 +88,10 @@ void WarpRenderer::initVertexArray()
 void WarpRenderer::updateMVP()
 {
     bool success;
-    _model = parent()->view().inverted(&success);
+    auto model = view().inverted(&success);
     Q_ASSERT(success);
-    _model.scale(parent()->aspectRatio(),1);
-    _modelUniform.setMatrix4fv(_model);
-    _viewUniform.setMatrix4fv(parent()->view());
-    _projectionUniform.setMatrix4fv(parent()->projection());
-    _scaleUniform.set1f(parent()->scale());
-    _updateModel = false;
+    model.scale(PortalRenderer::instance()->aspectRatio(),1);
+    _modelUniform.setMatrix4fv(model);
+    _viewUniform.setMatrix4fv(view());
+    _projectionUniform.setMatrix4fv(projection());
 }

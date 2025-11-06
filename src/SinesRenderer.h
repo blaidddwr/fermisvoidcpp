@@ -2,26 +2,28 @@
 #define SINESRENDERER_H
 #include "Clock.h"
 #include "OpenGLProgram.h"
-#include "OpenGLRenderer.h"
+#include "GameRenderer.h"
 #include <numbers>
 #include <random>
 class OpenGLBuffer;
 class OpenGLTexture1D;
 
-class SinesRenderer : public OpenGLRenderer
+class SinesRenderer : public GameRenderer
 {
     Q_OBJECT
 public:
+    GAME_RENDERER(SinesRenderer)
     constexpr static int SineSize {32};
     constexpr static int TextureWidth {512};
     constexpr static qreal SineLifetime {32.0};
-    SinesRenderer(PortalRenderer* parent = nullptr);
-    virtual ~SinesRenderer();
+    using GameRenderer::GameRenderer;
+    virtual ~SinesRenderer() override;
     OpenGLTexture1D& bubbleTexture() const { return *_bubbleTexture; }
     OpenGLTexture1D& smoothTexture() const { return *_smoothTexture; }
     OpenGLTexture1D& spikeTexture() const { return *_spikeTexture; }
-    virtual void initGL() override final;
     virtual void renderGL() override final;
+protected slots:
+    virtual void initGL() override final;
 private:
     struct __attribute__((packed)) Sine
     {
@@ -43,6 +45,7 @@ private:
     void initSmoothTexture();
     void initSpikeTexture();
     void updateNextSine();
+    static SinesRenderer* _instance;
     static const GLuint BubbleTextureIndex {0};
     static const GLuint SineBufferIndex {0};
     static const GLuint SmoothTextureIndex {1};

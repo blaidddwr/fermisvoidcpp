@@ -1,9 +1,10 @@
 #ifndef ATOMS_H
 #define ATOMS_H
-#include "GObject.h"
+#include "GameObject.h"
+#include "singleton.h"
 class Atom;
 
-class Atoms : public GObject
+class Atoms : public GameObject
 {
     Q_OBJECT
 public:
@@ -13,7 +14,8 @@ public:
         ,Bottom
         ,Left
     };
-    static Atoms& instance();
+    static Atoms& instance() { return singleton<Atoms>(); }
+    Atoms();
     virtual ~Atoms() override;
     bool canBond(int atomicNumber0,int atomicNumber1,Direction direction);
     const Atom& get(int atomicNumber) const;
@@ -23,8 +25,6 @@ signals:
     void atomsAboutToReset();
     void atomsReset();
 private:
-    Atoms();
-    static Atoms* _instance;
     QList<Atom*> _atoms;
 };
 

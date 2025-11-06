@@ -5,20 +5,9 @@
 #include "OpenGLShader.h"
 #include "OpenGLTexture1D.h"
 #include "OpenGLVertexArray.h"
-#include "PortalRenderer.h"
 #include "SinesRenderer.h"
+#include "WarpRenderer.h"
 #include <QColor>
-
-void AtomRenderer::Color::operator=(const QColor& color)
-{
-    r = color.redF();
-    g = color.greenF();
-    b = color.blueF();
-}
-
-AtomRenderer::AtomRenderer(PortalRenderer* parent):
-    OpenGLRenderer(parent)
-{}
 
 AtomRenderer::~AtomRenderer()
 {
@@ -28,31 +17,14 @@ AtomRenderer::~AtomRenderer()
     delete _program;
 }
 
-void AtomRenderer::initGL()
-{
-    initializeOpenGLFunctions();
-    initProgram();
-    initVertexArray();
-    _vertexArray->release();
-    _program->release();
-}
-
 void AtomRenderer::renderGL()
 {
     if (!_atoms.peek().isEmpty())
     {
-        parent()->sines().spikeTexture().bind(SpikeTextureIndex);
+        SinesRenderer::instance().spikeTexture().bind(SpikeTextureIndex);
         _program->use();
-        if (_updateView)
-        {
-            _viewUniform.setMatrix4fv(parent()->view());
-            _updateView = false;
-        }
-        if (_updateProjection)
-        {
-            _projectionUniform.setMatrix4fv(parent()->projection());
-            _updateProjection = false;
-        }
+        if (viewUpdated()) _viewUniform.setMatrix4fv(view());
+        if (projectionUpdated()) _projectionUniform.setMatrix4fv(projection());
         if (_atoms.updated()) updateAtoms();
         _vertexArray->bind();
         _vertexArray->drawInstanced(_atoms.peek().size());
@@ -66,14 +38,20 @@ void AtomRenderer::setAtoms(const QHash<QPoint,int>& atoms)
     _atoms.set() = atoms;
 }
 
-void AtomRenderer::updateProjection()
+void AtomRenderer::initGL()
 {
-    _updateProjection = true;
+    initializeOpenGLFunctions();
+    initProgram();
+    initVertexArray();
+    _vertexArray->release();
+    _program->release();
 }
 
-void AtomRenderer::updateView()
+void AtomRenderer::Color::operator=(const QColor& color)
 {
-    _updateView = true;
+    r = color.redF();
+    g = color.greenF();
+    b = color.blueF();
 }
 
 void AtomRenderer::initProgram()

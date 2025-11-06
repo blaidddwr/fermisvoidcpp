@@ -1,10 +1,13 @@
 #include "Application.h"
-#include "AtomItem.h"
+#include "AtomController.h"
 #include "AtomListModel.h"
 #include "AtomModel.h"
-#include "AtomController.h"
+#include "AtomRenderer.h"
+#include "AtomScene.h"
+#include "MenuScene.h"
 #include "PortalItem.h"
-#include "WarpItem.h"
+#include "SinesRenderer.h"
+#include "WarpRenderer.h"
 #include <QQuickView>
 #include <QSGRendererInterface>
 #include <QSurfaceFormat>
@@ -23,6 +26,23 @@ Application::Application(int& argc,char** argv):
     qmlRegisterType<AtomController>("internal",1,0,"AtomController");
     qmlRegisterType<AtomListModel>("internal",1,0,"AtomListModel");
     qmlRegisterType<AtomModel>("internal",1,0,"AtomModel");
-    qmlRegisterUncreatableType<WarpItem>("internal",1,0,"Warp",tr("Internal Item"));
-    qmlRegisterUncreatableType<AtomItem>("internal",1,0,"Atom",tr("Internal Item"));
+    qmlRegisterSingletonInstance("internal",1,0,"MenuScene",&MenuScene::instance());
+    qmlRegisterSingletonInstance("internal",1,0,"AtomScene",&AtomScene::instance());
+}
+
+void Application::registerPortal(PortalItem* item)
+{
+    Q_ASSERT(item);
+    Q_ASSERT(!_portal);
+    _portal = item;
+    connect(item,&PortalItem::rendererCreated,this,&Application::onPortalRendererCreated);
+    emit portalCreated(item);
+}
+
+void Application::onPortalRendererCreated(PortalRenderer* renderer)
+{
+    SinesRenderer::create(renderer);
+    WarpRenderer::create(renderer);
+    AtomRenderer::create(renderer);
+    SinesRenderer::instance().use();
 }

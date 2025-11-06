@@ -4,7 +4,6 @@ const float PI = 3.14159265358979323846;
 
 in vec2 fPosition;
 
-uniform float scale;
 uniform vec3 wColor;
 uniform vec3 evColor;
 uniform float evRadius;
@@ -15,10 +14,10 @@ out vec4 color;
 
 void main()
 {
-    const float evBorderRadius = 0.02/scale;
+    const float evBorderRadius = 0.02;
     float radius = distance(fPosition,vec2(0.0));
     if (radius < evRadius) discard;
-    float intensity = texture(smoothTexture,0.5*(radius-evRadius)*scale).r;
+    float intensity = texture(smoothTexture,0.5*(radius-evRadius)).r;
     if (radius < (evRadius+evBorderRadius))
     {
         float borderNormalRadius = (radius-evRadius)/evBorderRadius;

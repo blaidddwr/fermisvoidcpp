@@ -2,23 +2,23 @@
 #define ATOMRENDERER_H
 #include "Latch.h"
 #include "OpenGLProgram.h"
-#include "OpenGLRenderer.h"
+#include "GameRenderer.h"
 #include <QPointF>
 class OpenGLBuffer;
 class OpenGLVertexArray;
 
-class AtomRenderer : public OpenGLRenderer
+class AtomRenderer : public GameRenderer
 {
     Q_OBJECT
 public:
+    GAME_RENDERER(AtomRenderer)
     constexpr static int MaxInstanceSize {1024};
-    explicit AtomRenderer(PortalRenderer* parent = nullptr);
+    using GameRenderer::GameRenderer;
     virtual ~AtomRenderer() override;
-    virtual void initGL() override final;
     virtual void renderGL() override final;
     void setAtoms(const QHash<QPoint,int>& atoms);
-    virtual void updateProjection() override final;
-    virtual void updateView() override final;
+protected slots:
+    virtual void initGL() override final;
 private:
     struct __attribute__((packed)) Color
     {
@@ -50,8 +50,6 @@ private:
     OpenGLProgram::Uniform _projectionUniform;
     OpenGLProgram::Uniform _viewUniform;
     OpenGLVertexArray* _vertexArray {nullptr};
-    bool _updateProjection {true};
-    bool _updateView {true};
 };
 
 #endif

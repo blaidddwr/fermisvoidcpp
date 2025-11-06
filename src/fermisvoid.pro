@@ -10,18 +10,19 @@ SOURCES += \
         Application.cpp \
         Atom.cpp \
         AtomController.cpp \
-        AtomItem.cpp \
         AtomListModel.cpp \
         AtomModel.cpp \
         AtomRenderer.cpp \
+        AtomScene.cpp \
         Atoms.cpp \
         Clock.cpp \
-        GObject.cpp \
+        GameObject.cpp \
+        GameRenderer.cpp \
+        GameScene.cpp \
+        MenuScene.cpp \
         Molecule.cpp \
         OpenGLBuffer.cpp \
-        OpenGLItem.cpp \
         OpenGLProgram.cpp \
-        OpenGLRenderer.cpp \
         OpenGLShader.cpp \
         OpenGLTexture.cpp \
         OpenGLTexture1D.cpp \
@@ -31,7 +32,6 @@ SOURCES += \
         QuickItem.cpp \
         QuickRenderer.cpp \
         SinesRenderer.cpp \
-        WarpItem.cpp \
         WarpRenderer.cpp \
         main.cpp
 
@@ -44,19 +44,20 @@ HEADERS += \
     Application.h \
     Atom.h \
     AtomController.h \
-    AtomItem.h \
     AtomListModel.h \
     AtomModel.h \
     AtomRenderer.h \
+    AtomScene.h \
     Atoms.h \
     Clock.h \
-    GObject.h \
+    GameObject.h \
+    GameRenderer.h \
+    GameScene.h \
     Latch.h \
+    MenuScene.h \
     Molecule.h \
     OpenGLBuffer.h \
-    OpenGLItem.h \
     OpenGLProgram.h \
-    OpenGLRenderer.h \
     OpenGLShader.h \
     OpenGLTexture.h \
     OpenGLTexture1D.h \
@@ -66,8 +67,8 @@ HEADERS += \
     QuickItem.h \
     QuickRenderer.h \
     SinesRenderer.h \
-    WarpItem.h \
-    WarpRenderer.h
+    WarpRenderer.h \
+    singleton.h
 
 RESOURCES += \
     glsl.qrc \

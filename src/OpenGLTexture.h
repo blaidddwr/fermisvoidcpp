@@ -11,13 +11,13 @@ public:
     void bindImage(GLenum index,GLint level,GLenum access);
     void generateMipMaps();
     void setParameter(GLenum name,GLint value);
+    GLuint _id;
 protected:
     GLenum format() const { return _format; }
     GLuint id() const { return _id; }
 private:
     GLenum _format;
     GLenum _target;
-    GLuint _id;
 };
 
 #endif

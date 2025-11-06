@@ -4,27 +4,11 @@
 #include "SinesRenderer.h"
 #include <random>
 
-SinesRenderer::SinesRenderer(PortalRenderer* parent):
-    OpenGLRenderer(parent)
-    ,_gen(_rd())
-{}
-
 SinesRenderer::~SinesRenderer()
 {
     delete _spikeTexture;
     delete _sinesSSBO;
     delete _program;
-}
-
-void SinesRenderer::initGL()
-{
-    initializeOpenGLFunctions();
-    initProgram();
-    initSineBuffer();
-    initSmoothTexture();
-    initBubbleTexture();
-    initSpikeTexture();
-    _program->release();
 }
 
 void SinesRenderer::renderGL()
@@ -39,6 +23,17 @@ void SinesRenderer::renderGL()
     _sinesSSBO->bindToShaderStorage(SineBufferIndex);
     glDispatchCompute(TextureWidth,1,1);
     glMemoryBarrier(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT);
+    _program->release();
+}
+
+void SinesRenderer::initGL()
+{
+    initializeOpenGLFunctions();
+    initProgram();
+    initSineBuffer();
+    initSmoothTexture();
+    initBubbleTexture();
+    initSpikeTexture();
     _program->release();
 }
 

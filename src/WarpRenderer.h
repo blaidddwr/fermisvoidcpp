@@ -2,25 +2,26 @@
 #define WARPRENDERER_H
 #include "Latch.h"
 #include "OpenGLProgram.h"
-#include "OpenGLRenderer.h"
+#include "GameRenderer.h"
 #include <QColor>
-#include <QMatrix4x4>
 class OpenGLBuffer;
 class OpenGLVertexArray;
 
-class WarpRenderer : public OpenGLRenderer
+class WarpRenderer : public GameRenderer
 {
+    Q_OBJECT
 public:
-    explicit WarpRenderer(PortalRenderer* parent = nullptr);
+    GAME_RENDERER(WarpRenderer)
+    using GameRenderer::GameRenderer;
     virtual ~WarpRenderer() override;
-    virtual void initGL() override final;
     virtual void renderGL() override final;
     void setColor(const QColor& value);
     void setEVColor(const QColor& value);
     void setRadius(const qreal& value);
-    virtual void updateProjection() override final;
-    virtual void updateView() override final;
+protected slots:
+    virtual void initGL() override final;
 private:
+    static constexpr int SmoothTextureIndex {0};
     void initProgram();
     void initVertexArray();
     void updateMVP();
@@ -37,8 +38,6 @@ private:
     OpenGLProgram::Uniform _scaleUniform;
     OpenGLProgram::Uniform _viewUniform;
     OpenGLVertexArray* _vertexArray {nullptr};
-    QMatrix4x4 _model;
-    bool _updateModel {true};
 };
 
 #endif

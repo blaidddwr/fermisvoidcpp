@@ -3,13 +3,9 @@
 #include <QGuiApplication>
 #include <random>
 
-Atoms* Atoms::_instance {nullptr};
-
-Atoms& Atoms::instance()
-{
-    if (!_instance) _instance = new Atoms;
-    return *_instance;
-}
+Atoms::Atoms():
+    GameObject(QGuiApplication::instance())
+{}
 
 Atoms::~Atoms()
 {
@@ -71,10 +67,4 @@ void Atoms::generateAtoms(int seed)
             );
     }
     emit atomsReset();
-}
-
-Atoms::Atoms():
-    GObject(QGuiApplication::instance())
-{
-    Q_ASSERT(parent());
 }

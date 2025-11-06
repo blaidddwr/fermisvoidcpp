@@ -1,84 +1,65 @@
+#include "GameRenderer.h"
 #include "PortalRenderer.h"
-#include "SinesRenderer.h"
-#include "WarpRenderer.h"
+#ifdef QT_DEBUG
+#include <QOpenGLDebugLogger>
+#endif
 
-PortalRenderer::PortalRenderer(const QList<OpenGLRenderer*>& renderers):
-    _renderers(renderers)
-    ,_sines(new SinesRenderer(this))
-    ,_warp(new WarpRenderer(this))
+PortalRenderer::PortalRenderer()
 {
-    for (auto r: std::as_const(_renderers)) r->setParent(this);
-}
-
-void PortalRenderer::setActive(OpenGLRenderer* renderer)
-{
-    Q_ASSERT(
-        !renderer
-        || renderer->parent() == this
+#ifdef QT_DEBUG
+    _logger = new QOpenGLDebugLogger(this);
+    connect(
+        _logger
+        ,&QOpenGLDebugLogger::messageLogged
+        ,[](const QOpenGLDebugMessage& msg) { qDebug() << msg; }
         );
-    _active = renderer;
+#endif
+    singletonM<PortalRenderer>(this);
 }
 
-void PortalRenderer::setOffset(const QPointF& value)
+void PortalRenderer::add(GameRenderer* renderer)
 {
-    if (_offset != value)
-    {
-        _offset = value;
-        _updateView = true;
-    }
+    Q_ASSERT(!_renderers.contains(renderer));
+    _renderers.append(renderer);
 }
 
-void PortalRenderer::setScale(qreal value)
+void PortalRenderer::remove(GameRenderer* renderer)
 {
-    if (_scale != value)
-    {
-        _scale = value;
-        _updateView = true;
-    }
+    _renderers.removeOne(renderer);
 }
 
 void PortalRenderer::initGL()
 {
-    _sines->initGL();
-    _warp->initGL();
-    for (auto r: std::as_const(_renderers)) r->initGL();
+#ifdef QT_DEBUG
+    _logger->initialize();
+    _logger->startLogging();
+#endif
+    emit initRenderers();
+#ifdef QT_DEBUG
+    _logger->stopLogging();
+#endif
 }
 
 void PortalRenderer::paintGL()
 {
-    auto active = _active.peek();
-    if (
-        _active.updated()
-        && active
-        )
-    {
-        _active.get();
-        active->updateProjection();
-    }
-    if (_updateView)
-    {
-        _view = QMatrix4x4();
-        _view.scale(1.0/_scale);
-        _view.translate(-_offset.x(),-_offset.y());
-        _warp->updateView();
-        if (active) active->updateView();
-        _updateView = false;
-    }
+#ifdef QT_DEBUG
+    _logger->startLogging();
+#endif
     if (_updateProjection)
     {
         _projection = QMatrix4x4();
         auto a = aspectRatio();
         _projection.ortho(-a,a,-1.0,1.0,-1.0,1.0);
-        _warp->updateProjection();
-        if (active) active->updateProjection();
+        emit projectionChanged(_projection);
         _updateProjection = false;
     }
-    _sines->renderGL();
     glEnable(GL_DEPTH_TEST);
     glClear(GL_DEPTH_BUFFER_BIT);
-    _warp->renderGL();
-    if (active) active->renderGL();
+    for (auto r: std::as_const(_renderers)) r->renderGL();
     glClear(GL_DEPTH_BUFFER_BIT);
+#ifdef QT_DEBUG
+    _logger->stopLogging();
+#endif
 }
 
 void PortalRenderer::resizeGL()

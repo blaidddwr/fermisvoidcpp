@@ -1,40 +1,36 @@
 #ifndef PORTALRENDERER_H
 #define PORTALRENDERER_H
-#include "Latch.h"
 #include "QuickRenderer.h"
+#include "singleton.h"
 #include <QMatrix4x4>
-class OpenGLRenderer;
-class WarpRenderer;
-class SinesRenderer;
+class GameRenderer;
+#ifdef QT_DEBUG
+class QOpenGLDebugLogger;
+#endif
 
 class PortalRenderer : public QuickRenderer
 {
     Q_OBJECT
 public:
-    PortalRenderer(const QList<OpenGLRenderer*>& renderers);
-    SinesRenderer& sines() { return *_sines; }
-    WarpRenderer& warp() { return *_warp; }
+    static PortalRenderer* instance() { return &singletonM<PortalRenderer>(); }
+    PortalRenderer();
     const QMatrix4x4& projection() const { return _projection; }
-    const QMatrix4x4& view() const { return _view; }
-    qreal scale() const { return _scale; }
-    void setActive(OpenGLRenderer* renderer);
-    void setOffset(const QPointF& value);
-    void setScale(qreal value);
+    void add(GameRenderer* renderer);
+    void remove(GameRenderer* renderer);
+signals:
+    void initRenderers();
+    void projectionChanged(const QMatrix4x4& value);
 protected:
     virtual void initGL() override final;
     virtual void paintGL() override final;
     virtual void resizeGL() override final;
 private:
-    Latch<OpenGLRenderer*> _active {nullptr};
-    QList<OpenGLRenderer*> _renderers;
+    QList<GameRenderer*> _renderers;
     QMatrix4x4 _projection;
-    QMatrix4x4 _view;
-    QPointF _offset {0.0,0.0};
-    SinesRenderer* _sines;
-    WarpRenderer* _warp {nullptr};
     bool _updateProjection {true};
-    bool _updateView {true};
-    qreal _scale {1.0};
+#ifdef QT_DEBUG
+    QOpenGLDebugLogger* _logger;
+#endif
 };
 
 #endif

@@ -5,7 +5,8 @@ import internal
 
 Page {
     id: root
-    StackView.onActivating: activationAnimation.start()
+    StackView.onActivated: MenuScene.activate()
+    StackView.onDeactivated: MenuScene.deactivate()
     header: Pane {
         Label {
             anchors.centerIn: parent
