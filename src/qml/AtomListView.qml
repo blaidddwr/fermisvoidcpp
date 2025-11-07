@@ -3,14 +3,15 @@ import QtQuick
 import QtQuick.Layouts
 
 ListView {
+    id: root
     Control { id: control }
     property real horizontalPadding: 12
     property real verticalPadding: 6
     property real indentWidth: 12
+    property bool delegateBackground: true
     readonly property int currentAtomicNumber: {
         currentIndex === -1 ? -1 : model ? model.atomicNumber(currentIndex) : -1
     }
-    id: root
     implicitWidth: (control.font.pointSize*16)+(2*horizontalPadding)+indentWidth+15
     spacing: 6
     delegate: Item {
@@ -28,6 +29,7 @@ ListView {
             anchors.fill: parent
             color: delegate.ListView.isCurrentItem ? control.palette.light : control.palette.dark
             opacity: delegate.ListView.isCurrentItem ? 0.3 : 0.5
+            visible: root.delegateBackground || delegate.ListView.isCurrentItem
         }
         Rectangle {
             anchors.fill: parent

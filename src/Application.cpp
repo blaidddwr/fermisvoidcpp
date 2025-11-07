@@ -5,6 +5,7 @@
 #include "AtomRenderer.h"
 #include "AtomScene.h"
 #include "MenuScene.h"
+#include "MoleculeModel.h"
 #include "PortalItem.h"
 #include "SinesRenderer.h"
 #include "TransitionRenderer.h"
@@ -26,8 +27,9 @@ Application::Application(int& argc,char** argv):
     QSurfaceFormat::setDefaultFormat(format);
     qmlRegisterType<PortalItem>("internal",1,0,"Portal");
     qmlRegisterType<AtomController>("internal",1,0,"AtomController");
-    qmlRegisterType<AtomListModel>("internal",1,0,"AtomListModel");
     qmlRegisterType<AtomModel>("internal",1,0,"AtomModel");
+    qmlRegisterType<AtomListModel>("internal",1,0,"AtomListModel");
+    qmlRegisterType<MoleculeModel>("internal",1,0,"MoleculeModel");
     qmlRegisterSingletonInstance("internal",1,0,"TransitionScene",&TransitionScene::instance());
     qmlRegisterSingletonInstance("internal",1,0,"MenuScene",&MenuScene::instance());
     qmlRegisterSingletonInstance("internal",1,0,"AtomScene",&AtomScene::instance());

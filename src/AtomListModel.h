@@ -1,8 +1,6 @@
 #ifndef ATOMLISTMODEL_H
 #define ATOMLISTMODEL_H
 #include <QAbstractListModel>
-//TODO: rename this to AtomsModel, because it shows all atoms
-//TODO: move generateAtoms to this as invokable
 
 class AtomListModel : public QAbstractListModel
 {

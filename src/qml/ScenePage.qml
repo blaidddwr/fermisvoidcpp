@@ -11,7 +11,7 @@ Page {
     StackView.onDeactivating: timer.start()
     Timer {
         id: timer
-        interval: root.StackView.view.duration/2.0
+        interval: root.StackView.view ? root.StackView.view.duration/2 : 0
         repeat: false
         onTriggered: {
             if (root.StackView.status === StackView.Activating) root.activated()

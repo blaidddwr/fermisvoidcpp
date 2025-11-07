@@ -28,7 +28,7 @@ ScenePage {
                     text: "Atoms"
                     onClicked: {
                         atomController.generateAtoms()
-                        root.StackView.view.push("AtomPage.qml")
+                        root.StackView.view.push("AtomsPage.qml")
                     }
                 }
                 Button {

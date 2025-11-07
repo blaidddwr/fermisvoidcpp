@@ -3,7 +3,6 @@
 #include <QHash>
 #include <QPoint>
 //TODO: add MoleculeModel to expose molecules to QML(like atoms)
-//TODO: make AtomListModel(which will be property of MoleculeModel) that lists the atoms of a molecule
 
 /*
  * Molar mass is measured in grams per mole (g/mol).
@@ -15,7 +14,6 @@ class Molecule
 public:
     static constexpr qreal FreezingPointA {11.33};
     static constexpr qreal FreezingPointB {2.1259};
-    static Molecule generate();
     Molecule() = default;
     Molecule(int atomicNumber);
     Molecule(const Molecule& other) = default;
@@ -31,8 +29,8 @@ public:
     const QHash<QPoint,int>& atoms() const { return _atoms; }
     const QPointF& center() const { return _center; }
     int atom(const QPoint& position) const { return _atoms.value(position,-1); }
+    int size() const { return _atoms.size(); }
     qreal freezingPoint() const { return _freezingPoint; }
-    qreal liquidSlope() const { return _liquidSlope; }
     qreal molarMass() const { return _molarMass; }
     qreal radius() const { return _radius; }
 private:
@@ -40,7 +38,6 @@ private:
     QHash<QPoint,int> _atoms;
     QPointF _center {0.0,0.0};
     qreal _freezingPoint {0.0};
-    qreal _liquidSlope {0.0};
     qreal _molarMass {0.0};
     qreal _radius {0.0};
 };

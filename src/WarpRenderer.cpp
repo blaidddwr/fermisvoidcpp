@@ -27,6 +27,7 @@ void WarpRenderer::renderGL()
     if (_color.updated()) _colorUniform.setColor3f(_color.get());
     if (_evColor.updated()) _evColorUniform.setColor3f(_evColor.get());
     if (_radius.updated()) _radiusUniform.set1f(_radius.get());
+    if (_scale.updated()) _scaleUniform.set1f(_scale.get());
     _vertexArray->bind();
     _vertexArray->draw();
     _vertexArray->release();
@@ -43,9 +44,14 @@ void WarpRenderer::setEVColor(const QColor& value)
     _evColor = value;
 }
 
-void WarpRenderer::setRadius(const qreal& value)
+void WarpRenderer::setRadius(qreal value)
 {
     _radius = value;
+}
+
+void WarpRenderer::setScale(qreal value)
+{
+    _scale = value;
 }
 
 void WarpRenderer::initGL()
@@ -68,6 +74,7 @@ void WarpRenderer::initProgram()
     _colorUniform = _program->uniform("wColor");
     _evColorUniform = _program->uniform("evColor");
     _radiusUniform = _program->uniform("evRadius");
+    _scaleUniform = _program->uniform("scale");
     _program->uniform("smoothTexture").set1i(SmoothTextureIndex);
 }
 

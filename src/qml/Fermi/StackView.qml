@@ -4,7 +4,7 @@ import internal
 
 T.StackView {
     id: control
-    property real duration: 500
+    readonly property real duration: 500
     popEnter: Transition {
         XAnimator {
             from: -control.width

@@ -34,6 +34,7 @@ void MenuScene::activated()
     _color.set();
     _evColor.set();
     _radius.set();
+    _scale.set();
 }
 
 void MenuScene::deactivated()
@@ -47,4 +48,5 @@ void MenuScene::sync()
     if (_color.updated()) warp.setColor(_color.get());
     if (_evColor.updated()) warp.setEVColor(_evColor.get());
     if (_radius.updated()) warp.setRadius(_radius.get());
+    if (_scale.updated()) warp.setScale(_scale.get());
 }

@@ -12,7 +12,7 @@ ScenePage {
             anchors.fill: parent
             Item { Layout.fillWidth: true }
             Label {
-                text: qsTr("Atom Library")
+                text: qsTr("Atoms")
                 font.bold: true
                 Layout.alignment: Qt.AlignHCenter
             }
@@ -26,6 +26,10 @@ ScenePage {
             Label {
                 id: atomInfoLabel
                 Layout.fillWidth: true
+            }
+            Button {
+                text: "Molecule"
+                onClicked: root.StackView.view.push("MoleculePage.qml")
             }
             Button {
                 text: "Back"

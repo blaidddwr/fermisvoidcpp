@@ -2,43 +2,6 @@
 #include "Atoms.h"
 #include "Molecule.h"
 #include <QSet>
-#include <random>
-
-Molecule Molecule::generate()
-{
-    std::random_device rd;
-    std::mt19937 gen(rd());
-    auto& atoms = Atoms::instance();
-    std::bernoulli_distribution nextAtom(0.5);
-    int i = 1;
-    while (nextAtom(gen))
-    {
-        if (i == (atoms.size())) break;
-        i++;
-    }
-    Molecule ret(i);
-    while (ret.freezingPoint() < 4000.0)
-    {
-        auto aposns = ret.availablePositions();
-        if (!aposns.isEmpty())
-        {
-            auto pos = aposns.at(std::uniform_int_distribution<>(0,aposns.size()-1)(gen));
-            auto aas = ret.availableAtoms(pos);
-            if (!aas.isEmpty())
-            {
-                int i = 0;
-                while (nextAtom(gen))
-                {
-                    if (i == (aas.size()-1)) break;
-                    i++;
-                }
-                auto an = aas.at(i);
-                ret.addAtom(pos,an);
-            }
-        }
-    }
-    return ret;
-}
 
 Molecule::Molecule(int atomicNumber)
 {
@@ -50,11 +13,9 @@ Molecule::Molecule(int atomicNumber)
 Molecule::Molecule(Molecule&& other):
     _atoms(std::move(other._atoms))
     ,_freezingPoint(other._freezingPoint)
-    ,_liquidSlope(other._liquidSlope)
     ,_molarMass(other._molarMass)
 {
     other._freezingPoint = 0.0;
-    other._liquidSlope = 0.0;
     other._molarMass = 0.0;
 }
 
@@ -62,10 +23,8 @@ Molecule& Molecule::operator=(Molecule&& other)
 {
     _atoms = std::move(other._atoms);
     _freezingPoint = other._freezingPoint;
-    _liquidSlope = other._liquidSlope;
     _molarMass = other._molarMass;
     other._freezingPoint = 0.0;
-    other._liquidSlope = 0.0;
     other._molarMass = 0.0;
     return *this;
 }
@@ -96,13 +55,14 @@ QList<int> Molecule::availableAtoms(const QPoint& position) const
 QList<QPoint> Molecule::availablePositions() const
 {
     QSet<QPoint> ret;
-    const auto posns = positions();
-    for (auto pos: posns)
+    const auto ps = positions();
+    if (ps.isEmpty()) ret.insert({0,0});
+    for (auto pos: ps)
     {
-        if (!posns.contains({pos.x(),pos.y()+1})) ret.insert({pos.x(),pos.y()+1});
-        if (!posns.contains({pos.x()+1,pos.y()})) ret.insert({pos.x()+1,pos.y()});
-        if (!posns.contains({pos.x(),pos.y()-1})) ret.insert({pos.x(),pos.y()-1});
-        if (!posns.contains({pos.x()-1,pos.y()})) ret.insert({pos.x()-1,pos.y()});
+        if (!ps.contains({pos.x(),pos.y()+1})) ret.insert({pos.x(),pos.y()+1});
+        if (!ps.contains({pos.x()+1,pos.y()})) ret.insert({pos.x()+1,pos.y()});
+        if (!ps.contains({pos.x(),pos.y()-1})) ret.insert({pos.x(),pos.y()-1});
+        if (!ps.contains({pos.x()-1,pos.y()})) ret.insert({pos.x()-1,pos.y()});
     }
     return ret.values();
 }
@@ -149,5 +109,4 @@ void Molecule::update()
     }
     _radius = sqrt(_radius);
     _freezingPoint = FreezingPointA+(FreezingPointB*_molarMass);
-    //TODO: liquid slope
 }

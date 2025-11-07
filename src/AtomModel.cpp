@@ -8,7 +8,7 @@ AtomModel::AtomModel(QObject *parent):
 
 const QColor& AtomModel::color() const
 {
-    static const QColor def;
+    static const QColor def(Qt::white);
     return _atom ? _atom->color() : def;
 }
 

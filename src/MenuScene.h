@@ -31,6 +31,7 @@ private:
     Latch<QColor> _color;
     Latch<QColor> _evColor;
     Latch<qreal> _radius {0.0};
+    Latch<qreal> _scale {1.0};
 };
 
 #endif

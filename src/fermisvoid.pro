@@ -21,6 +21,7 @@ SOURCES += \
         GameScene.cpp \
         MenuScene.cpp \
         Molecule.cpp \
+        MoleculeModel.cpp \
         OpenGLBuffer.cpp \
         OpenGLProgram.cpp \
         OpenGLShader.cpp \
@@ -58,6 +59,7 @@ HEADERS += \
     Latch.h \
     MenuScene.h \
     Molecule.h \
+    MoleculeModel.h \
     OpenGLBuffer.h \
     OpenGLProgram.h \
     OpenGLShader.h \

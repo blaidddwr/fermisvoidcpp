@@ -26,17 +26,17 @@ void AtomScene::setRadius(qreal value)
 
 /*
  * TODO: move to MoleculeScene, once implemented
-void AtomItem::setMolecule(const Molecule& molecule)
+void AtomItem::setModel(MoleculeModel* model)
 {
-    if (molecule.isEmpty())
+    if (!model || model->molecule().isEmpty())
     {
-        setAtom(-1);
+        _atoms.set() = {};
         return;
     }
-    _atoms.set() = molecule.atoms();
-    setRadius(molecule.radius()+0.8);
-    setScale((molecule.radius()+0.8)/0.8);
-    setOffset(molecule.center());
+    _atoms.set() = model->molecule().atoms();
+    setRadius(model.radius()+0.8);
+    setScale((model.radius()+0.8)/0.8);
+    setOffset(model.center());
 }
 */
 
