@@ -17,6 +17,7 @@ public:
     AtomListModel(QObject* parent = nullptr);
     AtomListModel(const QList<int>& atoms,QObject* parent = nullptr);
     Q_INVOKABLE int atomicNumber(int row) const;
+    Q_INVOKABLE int indexOf(int atomicNumber) const;
     const QList<int>& atoms() const { return _atoms; }
     virtual QHash<int,QByteArray> roleNames() const override final;
     virtual QVariant data(const QModelIndex& index,int role=Qt::DisplayRole) const override final;

@@ -21,6 +21,11 @@ int AtomListModel::atomicNumber(int row) const
     return _atoms.at(row);
 }
 
+int AtomListModel::indexOf(int atomicNumber) const
+{
+    return _atoms.indexOf(atomicNumber);
+}
+
 QHash<int,QByteArray> AtomListModel::roleNames() const
 {
     return {

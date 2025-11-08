@@ -70,7 +70,13 @@ QList<QPoint> Molecule::availablePositions() const
 bool Molecule::addAtom(const QPoint& position,int atomicNumber)
 {
     if (!canAddAtom(position,atomicNumber)) return false;
-    _atoms.insert(position,atomicNumber);
+    auto i = _atoms.find(position);
+    if (i == _atoms.end()) _atoms.insert(position,atomicNumber);
+    else
+    {
+        _molarMass -= Atoms::instance().get(i.value()).mass();
+        i.value() = atomicNumber;
+    }
     _molarMass += Atoms::instance().get(atomicNumber).mass();
     update();
     return true;
@@ -78,7 +84,7 @@ bool Molecule::addAtom(const QPoint& position,int atomicNumber)
 
 bool Molecule::canAddAtom(const QPoint& position,int atomicNumber) const
 {
-    if (_atoms.contains(position)) return false;
+    if (_atoms.contains(position)) return true;
     auto top = atom({position.x(),position.y()+1});
     auto right = atom({position.x()+1,position.y()});
     auto bottom = atom({position.x(),position.y()-1});
@@ -90,6 +96,59 @@ bool Molecule::canAddAtom(const QPoint& position,int atomicNumber) const
         && atoms.canBond(atomicNumber,bottom,Atoms::Direction::Bottom)
         && atoms.canBond(atomicNumber,left,Atoms::Direction::Left)
         );
+}
+
+bool Molecule::canRemoveAtom(const QPoint& position) const
+{
+    if (
+        !_atoms.contains(position)
+        || position == QPoint(0,0)
+        )
+    {
+        return false;
+    }
+    QSet<QPoint> travelled {position};
+    std::function<void(const QPoint&)> travel;
+    travel = [&travel,this,&travelled](const QPoint& pos)
+    {
+        if (
+            _atoms.contains(pos)
+            && !travelled.contains(pos)
+            )
+        {
+            travelled.insert(pos);
+            travel({pos.x(),pos.y()+1});
+            travel({pos.x()+1,pos.y()});
+            travel({pos.x(),pos.y()-1});
+            travel({pos.x()-1,pos.y()});
+        }
+    };
+    const QList<QPoint> ss {
+        {position.x(),position.y()+1}
+        ,{position.x()+1,position.y()}
+        ,{position.x(),position.y()-1}
+        ,{position.x()-1,position.y()}
+    };
+    for (const auto& pos: ss)
+    {
+        if (_atoms.contains(pos))
+        {
+            travel(pos);
+            return travelled.size() == _atoms.size();
+        }
+    }
+    return false;
+}
+
+bool Molecule::removeAtom(const QPoint& position)
+{
+    if (!canRemoveAtom(position)) return false;
+    auto i = _atoms.find(position);
+    Q_ASSERT(i != _atoms.end());
+    _molarMass += Atoms::instance().get(i.value()).mass();
+    _atoms.erase(i);
+    update();
+    return true;
 }
 
 void Molecule::update()

@@ -2,7 +2,6 @@
 #define MOLECULE_H
 #include <QHash>
 #include <QPoint>
-//TODO: add MoleculeModel to expose molecules to QML(like atoms)
 
 /*
  * Molar mass is measured in grams per mole (g/mol).
@@ -25,7 +24,9 @@ public:
     QList<int> availableAtoms(const QPoint& position) const;
     bool addAtom(const QPoint& position,int atomicNumber);
     bool canAddAtom(const QPoint& position,int atomicNumber) const;
+    bool canRemoveAtom(const QPoint& position) const;
     bool isEmpty() const { return _atoms.isEmpty(); }
+    bool removeAtom(const QPoint& position);
     const QHash<QPoint,int>& atoms() const { return _atoms; }
     const QPointF& center() const { return _center; }
     int atom(const QPoint& position) const { return _atoms.value(position,-1); }
