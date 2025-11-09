@@ -6,6 +6,7 @@
 #include "AtomScene.h"
 #include "MenuScene.h"
 #include "MoleculeModel.h"
+#include "MoleculeScene.h"
 #include "PortalItem.h"
 #include "SinesRenderer.h"
 #include "TransitionRenderer.h"
@@ -33,6 +34,7 @@ Application::Application(int& argc,char** argv):
     qmlRegisterSingletonInstance("internal",1,0,"TransitionScene",&TransitionScene::instance());
     qmlRegisterSingletonInstance("internal",1,0,"MenuScene",&MenuScene::instance());
     qmlRegisterSingletonInstance("internal",1,0,"AtomScene",&AtomScene::instance());
+    qmlRegisterSingletonInstance("internal",1,0,"MoleculeScene",&MoleculeScene::instance());
 }
 
 void Application::registerPortal(PortalItem* item)

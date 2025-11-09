@@ -1,12 +1,14 @@
 #ifndef PORTALITEM_H
 #define PORTALITEM_H
 #include "QuickItem.h"
+#include "singleton.h"
 class PortalRenderer;
 
 class PortalItem : public QuickItem
 {
     Q_OBJECT
 public:
+    static PortalItem* instance() { return &singletonM<PortalItem>(); }
     PortalItem(QQuickItem* parent = nullptr);
 signals:
     void rendererCreated(PortalRenderer* renderer);

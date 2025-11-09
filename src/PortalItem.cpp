@@ -10,6 +10,7 @@ PortalItem::PortalItem(QQuickItem* parent):
     Q_ASSERT(app);
     app->registerPortal(this);
     startTimer(16);
+    singletonM<PortalItem>(this);
 }
 
 QuickRenderer* PortalItem::createRenderer()

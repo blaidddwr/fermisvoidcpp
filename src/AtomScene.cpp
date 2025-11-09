@@ -24,26 +24,11 @@ void AtomScene::setRadius(qreal value)
     _radius = value;
 }
 
-/*
- * TODO: move to MoleculeScene, once implemented
-void AtomItem::setModel(MoleculeModel* model)
-{
-    if (!model || model->molecule().isEmpty())
-    {
-        _atoms.set() = {};
-        return;
-    }
-    _atoms.set() = model->molecule().atoms();
-    setRadius(model.radius()+0.8);
-    setScale((model.radius()+0.8)/0.8);
-    setOffset(model.center());
-}
-*/
-
 void AtomScene::activated()
 {
     WarpRenderer::instance().use();
     AtomRenderer::instance().use();
+    view().set();
     _radius.set();
     _atom.set();
 }
@@ -56,6 +41,14 @@ void AtomScene::deactivated()
 
 void AtomScene::sync()
 {
-    if (_radius.updated()) WarpRenderer::instance().setRadius(ActualRadius*_radius.get());
-    if (_atom.updated()) AtomRenderer::instance().setAtoms(_atom.get());
+    auto& warp = WarpRenderer::instance();
+    auto& atom = AtomRenderer::instance();
+    if (view().updated())
+    {
+        warp.setView(view().get());
+        warp.setScale(1.0);
+        atom.setView(view().get());
+    }
+    if (_radius.updated()) warp.setRadius(ActualRadius*_radius.get());
+    if (_atom.updated()) atom.setAtoms(_atom.get());
 }

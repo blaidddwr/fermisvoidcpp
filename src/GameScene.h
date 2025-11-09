@@ -17,12 +17,13 @@ public:
     Q_INVOKABLE void activate();
     Q_INVOKABLE void deactivate();
 protected:
+    Latch<QMatrix4x4>& view() { return _view; }
     virtual void activated() = 0;
     virtual void deactivated() = 0;
     virtual void sync() = 0;
-    void setView(const QMatrix4x4& value);
+protected slots:
+    virtual void onPortalCreated(PortalItem* item);
 private slots:
-    void onPortalCreated(PortalItem* item);
     void onSync();
 private:
     Latch<QMatrix4x4> _view;

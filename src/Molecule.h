@@ -28,7 +28,6 @@ public:
     bool isEmpty() const { return _atoms.isEmpty(); }
     bool removeAtom(const QPoint& position);
     const QHash<QPoint,int>& atoms() const { return _atoms; }
-    const QPointF& center() const { return _center; }
     int atom(const QPoint& position) const { return _atoms.value(position,-1); }
     int size() const { return _atoms.size(); }
     qreal freezingPoint() const { return _freezingPoint; }
@@ -37,7 +36,6 @@ public:
 private:
     void update();
     QHash<QPoint,int> _atoms;
-    QPointF _center {0.0,0.0};
     qreal _freezingPoint {0.0};
     qreal _molarMass {0.0};
     qreal _radius {0.0};

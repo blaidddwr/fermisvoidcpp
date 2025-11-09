@@ -153,14 +153,6 @@ bool Molecule::removeAtom(const QPoint& position)
 
 void Molecule::update()
 {
-    qreal x = 0.0;
-    qreal y = 0.0;
-    for (const auto& pos: _atoms.keys())
-    {
-        x += qreal(pos.x())/qreal(_atoms.size());
-        y += qreal(pos.y())/qreal(_atoms.size());
-    }
-    _center = {x,y};
     _radius = 0.0;
     for (const auto& pos: _atoms.keys())
     {

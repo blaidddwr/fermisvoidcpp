@@ -47,7 +47,7 @@ void PortalRenderer::paintGL()
 #endif
     if (_updateProjection)
     {
-        _projection = QMatrix4x4();
+        _projection.setToIdentity();
         auto a = aspectRatio();
         _projection.ortho(-a,a,-1.0,1.0,-1.0,1.0);
         emit projectionChanged(_projection);

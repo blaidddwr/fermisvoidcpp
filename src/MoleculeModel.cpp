@@ -21,9 +21,10 @@ bool MoleculeModel::addAtom(const QPoint& position,int atomicNumber)
         addLocation({position.x()-1,position.y()});
         auto i = index(row);
         emit dataChanged(i,i,{AtomicNumberRole});
-        emit centerChanged(_molecule.center());
         emit freezingPointChanged(_molecule.freezingPoint());
         emit molarMassChanged(_molecule.molarMass());
+        emit radiusChanged(_molecule.radius());
+        emit moleculeChanged(_molecule);
         return true;
     }
     else return false;
@@ -42,9 +43,10 @@ bool MoleculeModel::removeAtom(const QPoint& position)
         removeLocation(aps,{position.x()-1,position.y()});
         auto i = index(row);
         emit dataChanged(i,i,{AtomicNumberRole});
-        emit centerChanged(_molecule.center());
         emit freezingPointChanged(_molecule.freezingPoint());
         emit molarMassChanged(_molecule.molarMass());
+        emit radiusChanged(_molecule.radius());
+        emit moleculeChanged(_molecule);
         return true;
     }
     else return false;

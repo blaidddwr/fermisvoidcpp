@@ -35,8 +35,3 @@ void GameScene::onSync()
     }
     if (_active[0]) sync();
 }
-
-void GameScene::setView(const QMatrix4x4& value)
-{
-    _view = value;
-}

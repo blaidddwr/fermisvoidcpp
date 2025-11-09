@@ -16,7 +16,6 @@ public:
     qreal radius() const { return _radius.peek(); }
     void setAtomicNumber(int value);
     void setRadius(qreal value);
-    //void setModel(MoleculeModel* model);//TODO:move to MoleculeScene once implemented
 signals:
     void atomicNumberChanged(int value);
     void radiusChanged(int value);
