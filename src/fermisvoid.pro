@@ -15,6 +15,7 @@ SOURCES += \
         AtomRenderer.cpp \
         AtomScene.cpp \
         Atoms.cpp \
+        CameraScene.cpp \
         Clock.cpp \
         GameObject.cpp \
         GameRenderer.cpp \
@@ -53,6 +54,7 @@ HEADERS += \
     AtomRenderer.h \
     AtomScene.h \
     Atoms.h \
+    CameraScene.h \
     Clock.h \
     GameObject.h \
     GameRenderer.h \

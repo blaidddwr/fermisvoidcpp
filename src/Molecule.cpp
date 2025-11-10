@@ -74,10 +74,10 @@ bool Molecule::addAtom(const QPoint& position,int atomicNumber)
     if (i == _atoms.end()) _atoms.insert(position,atomicNumber);
     else
     {
-        _molarMass -= Atoms::instance().get(i.value()).mass();
+        //_molarMass -= Atoms::instance().get(i.value()).mass();
         i.value() = atomicNumber;
     }
-    _molarMass += Atoms::instance().get(atomicNumber).mass();
+    //_molarMass += Atoms::instance().get(atomicNumber).mass();
     update();
     return true;
 }
@@ -145,7 +145,7 @@ bool Molecule::removeAtom(const QPoint& position)
     if (!canRemoveAtom(position)) return false;
     auto i = _atoms.find(position);
     Q_ASSERT(i != _atoms.end());
-    _molarMass += Atoms::instance().get(i.value()).mass();
+    //_molarMass -= Atoms::instance().get(i.value()).mass();
     _atoms.erase(i);
     update();
     return true;
@@ -153,10 +153,12 @@ bool Molecule::removeAtom(const QPoint& position)
 
 void Molecule::update()
 {
+    _molarMass = 0.0;
     _radius = 0.0;
-    for (const auto& pos: _atoms.keys())
+    for (auto i = _atoms.cbegin();i != _atoms.cend();i++)
     {
-        _radius = fmax(_radius,(pos.x()*pos.x())+(pos.y()*pos.y()));
+        _molarMass += Atoms::instance().get(i.value()).mass();
+        _radius = qMax(_radius,qreal(i.key().x()*i.key().x())+(i.key().y()*i.key().y()));
     }
     _radius = sqrt(_radius);
     _freezingPoint = FreezingPointA+(FreezingPointB*_molarMass);

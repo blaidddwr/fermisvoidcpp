@@ -4,7 +4,6 @@ import QtQuick.Layouts
 
 ListView {
     id: root
-    Control { id: control }
     signal doubleClicked(int atomicNumber)
     property real horizontalPadding: 12
     property real verticalPadding: 6
@@ -13,6 +12,7 @@ ListView {
     readonly property int currentAtomicNumber: {
         currentIndex === -1 ? -1 : model ? model.atomicNumber(currentIndex) : -1
     }
+    Control { id: control }
     onCurrentIndexChanged: positionViewAtIndex(currentIndex,ListView.Visible)
     implicitWidth: (control.font.pointSize*16)+(2*horizontalPadding)+Math.abs(indentWidth)+15
     spacing: 6

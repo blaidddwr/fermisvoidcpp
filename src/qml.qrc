@@ -15,5 +15,7 @@
         <file>qml/Fermi/StackView.qml</file>
         <file>qml/ScenePage.qml</file>
         <file>qml/MoleculePage.qml</file>
+        <file>qml/CameraPage.qml</file>
+        <file>qml/MoleculeOverlay.qml</file>
     </qresource>
 </RCC>
