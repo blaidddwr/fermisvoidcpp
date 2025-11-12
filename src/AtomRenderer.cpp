@@ -1,6 +1,7 @@
 #include "Atom.h"
 #include "AtomRenderer.h"
 #include "Atoms.h"
+#include "Molecule.h"
 #include "OpenGLBuffer.h"
 #include "OpenGLShader.h"
 #include "OpenGLTexture1D.h"
@@ -90,9 +91,9 @@ void AtomRenderer::updateAtoms()
     static const quint32 POSITIVE = 0;
     static const quint32 NEGATIVE = 1;
     static const quint32 COVALENT = 2;
-    Q_ASSERT(POSITIVE == Atom::Bond::Positive);
-    Q_ASSERT(NEGATIVE == Atom::Bond::Negative);
-    Q_ASSERT(COVALENT == Atom::Bond::Covalent);
+    Q_ASSERT(POSITIVE == static_cast<int>(Atom::Bond::Positive));
+    Q_ASSERT(NEGATIVE == static_cast<int>(Atom::Bond::Negative));
+    Q_ASSERT(COVALENT == static_cast<int>(Atom::Bond::Covalent));
     Q_ASSERT(atoms.size() <= MaxInstanceSize);
     int c = 0;
     for (auto i = atoms.begin();i != atoms.end();i++)
@@ -107,10 +108,11 @@ void AtomRenderer::updateAtoms()
         atomBuffer.x = x;
         atomBuffer.y = y;
         atomBuffer.atomColor = atom.color();
-        atomBuffer.topBond = atom.topBond()+(atoms.contains({x,y+1})?4:0);
-        atomBuffer.rightBond = atom.rightBond()+(atoms.contains({x+1,y})?4:0);
-        atomBuffer.bottomBond = atom.bottomBond()+(atoms.contains({x,y-1})?4:0);
-        atomBuffer.leftBond = atom.leftBond()+(atoms.contains({x-1,y})?4:0);
+        for (int i = 0;i < 4;i++)
+        {
+            atomBuffer.bonds[i] = static_cast<int>(atom.bond(Atom::direction(i)));
+            if (atoms.contains(Molecule::neighbor({x,y},i))) atomBuffer.bonds[i] += 4;
+        }
         c++;
     }
     _instancedBuffer->write(0,sizeof(AtomBuffer)*atoms.size(),_atomBuffer);

@@ -5,7 +5,10 @@ import internal
 
 Item {
     id: root
+    signal clicked(point position)
+    signal removed()
     property var model: null
+    property int currentAtomicNumber: -1
     property real screenScale: 1
     property bool hideGUI: false
     readonly property point center: Qt.point((width/2),(height/2))
@@ -70,20 +73,17 @@ Item {
                     hoverEnabled: true
                     acceptedButtons: Qt.LeftButton|Qt.RightButton
                     onClicked: function(mouse) {
+                        var pos = Qt.point(model.x,model.y)
                         if (repeater.currentIndex !== index)
                         {
                             repeater.currentIndex = index
-                            atomListView.update()
+                            root.currentAtomicNumber = atomicNumber
+                            root.clicked(pos)
                         }
-                        var m = root.model
                         if (mouse.button === Qt.RightButton)
                         {
-                            var pos = Qt.point(model.x,model.y)
-                            if (m.removeAtom(pos)) atomListView.update()
+                            if (root.model.removeAtom(pos)) root.removed()
                         }
-                        atomListView.atoms = m.availableAtoms(Qt.point(model.x,model.y))
-                        atomListView.position = Qt.point(model.x,model.y)
-                        atomListView.atomicNumber = atomicNumber
                     }
                 }
             }

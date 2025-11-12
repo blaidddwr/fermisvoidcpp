@@ -8,12 +8,19 @@
 class Atom
 {
 public:
-    enum Bond {
+    enum class Bond {
         Positive
         ,Negative
         ,Covalent
     };
+    enum class Direction {
+        Top
+        ,Right
+        ,Bottom
+        ,Left
+    };
     static bool canBond(Bond b0,Bond b1);
+    static Direction direction(int index);
     Atom(
         int atomicNumber
         ,qreal mass
@@ -23,19 +30,13 @@ public:
         ,Bond bottomBond
         ,Bond leftBond
         );
-    Bond bottomBond() const { return _bottomBond; }
-    Bond leftBond() const { return _leftBond; }
-    Bond rightBond() const { return _rightBond; }
-    Bond topBond() const { return _topBond; }
+    Bond bond(Direction d) const;
     const QColor& color() const { return _color; }
     int atomicNumber() const { return _atomicNumber; }
     int charge() const;
     qreal mass() const { return _mass; }
 private:
-    Bond _topBond;
-    Bond _rightBond;
-    Bond _bottomBond;
-    Bond _leftBond;
+    Bond _bonds[4];
     QColor _color;
     int _atomicNumber;
     qreal _mass;

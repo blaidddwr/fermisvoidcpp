@@ -48,17 +48,36 @@ CameraPage {
                 Label {
                     Layout.preferredWidth: largestHeaderLabel.implicitWidth
                     horizontalAlignment: Text.AlignRight
+                    text: qsTr("Color:")
+                }
+                Label {
+                    color: root.model.color
+                    text: qsTr("%1").arg(root.model.color.toString())
+                }
+            }
+            RowLayout {
+                Label {
+                    id: largestHeaderLabel
+                    Layout.preferredWidth: implicitWidth
                     text: qsTr("Molar Mass:")
                 }
                 Label { text: qsTr("%1 g/mol").arg(root.model.molarMass) }
             }
             RowLayout {
                 Label {
-                    id: largestHeaderLabel
-                    Layout.preferredWidth: implicitWidth
-                    text: qsTr("Freezing Point:");
+                    Layout.preferredWidth: largestHeaderLabel.implicitWidth
+                    horizontalAlignment: Text.AlignRight
+                    text: qsTr("Stability:")
                 }
-                Label { text: qsTr("%1 K").arg(root.model.freezingPoint) }
+                Label { text: qsTr("%1").arg(root.model.stability) }
+            }
+            RowLayout {
+                Label {
+                    Layout.preferredWidth: largestHeaderLabel.implicitWidth
+                    horizontalAlignment: Text.AlignRight
+                    text: qsTr("Charge:")
+                }
+                Label { text: qsTr("%1").arg(root.model.charge) }
             }
         }
     }
@@ -69,13 +88,14 @@ CameraPage {
         screenScale: root.screenScale
         hideGUI: root.hideGUI
         visible: false
+        onClicked: (position) => { atomListView.position = position }
+        onRemoved: atomListView.update()
     }
     AtomListView {
         id: atomListView
-        property var atoms: root.model.availableAtoms(position)
         property point position: Qt.point(0,0)
-        property int atomicNumber: -1
         function update() { atomListAnimation.restart() }
+        onPositionChanged: update();
         anchors.top: parent.top
         anchors.bottom: parent.bottom
         anchors.margins: 5
@@ -83,7 +103,7 @@ CameraPage {
         width: implicitWidth
         height: parent.height
         x: root.width-width-5
-        model: AtomListModel { atoms: atomListView.atoms }
+        model: AtomListModel {}
         clip: true
         indentWidth: -12
         onDoubleClicked: function(atomicNumber) {
@@ -100,9 +120,9 @@ CameraPage {
             }
             ScriptAction {
                 script: {
-                    atomListView.model.atoms = atomListView.atoms
+                    atomListView.model.atoms = root.model.availableAtoms(atomListView.position)
                     atomListView.currentIndex = atomListView.model.indexOf(
-                                atomListView.atomicNumber
+                                moleculeOverlay.currentAtomicNumber
                                 )
                 }
             }

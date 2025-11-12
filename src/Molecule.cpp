@@ -1,9 +1,32 @@
 #include "Atom.h"
 #include "Atoms.h"
 #include "Molecule.h"
+#include <QCryptographicHash>
 #include <QSet>
 
-Molecule::Molecule(int atomicNumber)
+QPoint Molecule::neighbor(const QPoint& position,int index)
+{
+    switch(Atom::direction(index))
+    {
+    case Atom::Direction::Top:
+        return {position.x(),position.y()+1};
+    case Atom::Direction::Right:
+        return {position.x()+1,position.y()};
+    case Atom::Direction::Bottom:
+        return {position.x(),position.y()-1};
+    case Atom::Direction::Left:
+        return {position.x()-1,position.y()};
+    default:
+        return position;
+    }
+}
+
+Molecule::Molecule():
+    _hash(QCryptographicHash(QCryptographicHash::Sha256).result())
+{}
+
+Molecule::Molecule(int atomicNumber):
+    _hash(QCryptographicHash(QCryptographicHash::Sha256).result())
 {
     Q_ASSERT(atomicNumber > 0);
     Q_ASSERT(atomicNumber <= Atoms::instance().size());
@@ -11,43 +34,45 @@ Molecule::Molecule(int atomicNumber)
 }
 
 Molecule::Molecule(Molecule&& other):
-    _atoms(std::move(other._atoms))
-    ,_freezingPoint(other._freezingPoint)
+    _hash(other._hash)
+    ,_color(other._color)
+    ,_atoms(std::move(other._atoms))
+    ,_mappedAtoms(std::move(other._mappedAtoms))
+    ,_charge(other._charge)
     ,_molarMass(other._molarMass)
+    ,_stability(other._stability)
 {
-    other._freezingPoint = 0.0;
+    other._hash = QCryptographicHash(QCryptographicHash::Sha256).result();
+    other._color = QColor();
+    other._charge = 0;
     other._molarMass = 0.0;
+    other._stability = 0.0;
 }
 
 Molecule& Molecule::operator=(Molecule&& other)
 {
+    _hash = other._hash;
+    _color = other._color;
     _atoms = std::move(other._atoms);
-    _freezingPoint = other._freezingPoint;
+    _mappedAtoms = std::move(other._mappedAtoms);
+    _charge = other._charge;
     _molarMass = other._molarMass;
-    other._freezingPoint = 0.0;
+    _stability = other._stability;
+    other._hash = QCryptographicHash(QCryptographicHash::Sha256).result();
+    other._color = QColor();
+    other._charge = 0;
     other._molarMass = 0.0;
+    other._stability = 0.0;
     return *this;
 }
 
 QList<int> Molecule::availableAtoms(const QPoint& position) const
 {
     QList<int> ret;
-    auto top = atom({position.x(),position.y()+1});
-    auto right = atom({position.x()+1,position.y()});
-    auto bottom = atom({position.x(),position.y()-1});
-    auto left = atom({position.x()-1,position.y()});
     auto& atoms = Atoms::instance();
     for (int a = 1;a <= atoms.size();a++)
     {
-        if (
-            atoms.canBond(a,top,Atoms::Direction::Top)
-            && atoms.canBond(a,right,Atoms::Direction::Right)
-            && atoms.canBond(a,bottom,Atoms::Direction::Bottom)
-            && atoms.canBond(a,left,Atoms::Direction::Left)
-            )
-        {
-            ret.append(a);
-        }
+        if (canAddAtom(position,a)) ret.append(a);
     }
     return ret;
 }
@@ -59,10 +84,11 @@ QList<QPoint> Molecule::availablePositions() const
     if (ps.isEmpty()) ret.insert({0,0});
     for (auto pos: ps)
     {
-        if (!ps.contains({pos.x(),pos.y()+1})) ret.insert({pos.x(),pos.y()+1});
-        if (!ps.contains({pos.x()+1,pos.y()})) ret.insert({pos.x()+1,pos.y()});
-        if (!ps.contains({pos.x(),pos.y()-1})) ret.insert({pos.x(),pos.y()-1});
-        if (!ps.contains({pos.x()-1,pos.y()})) ret.insert({pos.x()-1,pos.y()});
+        for (int i = 0;i < 4;i++)
+        {
+            auto np = neighbor(pos,i);
+            if (!ps.contains(np)) ret.insert(np);
+        }
     }
     return ret.values();
 }
@@ -70,32 +96,23 @@ QList<QPoint> Molecule::availablePositions() const
 bool Molecule::addAtom(const QPoint& position,int atomicNumber)
 {
     if (!canAddAtom(position,atomicNumber)) return false;
-    auto i = _atoms.find(position);
-    if (i == _atoms.end()) _atoms.insert(position,atomicNumber);
-    else
-    {
-        //_molarMass -= Atoms::instance().get(i.value()).mass();
-        i.value() = atomicNumber;
-    }
-    //_molarMass += Atoms::instance().get(atomicNumber).mass();
+    _atoms[position] = atomicNumber;
+    _mappedAtoms[position] = atomicNumber;
     update();
     return true;
 }
 
 bool Molecule::canAddAtom(const QPoint& position,int atomicNumber) const
 {
-    if (_atoms.contains(position)) return true;
-    auto top = atom({position.x(),position.y()+1});
-    auto right = atom({position.x()+1,position.y()});
-    auto bottom = atom({position.x(),position.y()-1});
-    auto left = atom({position.x()-1,position.y()});
     auto& atoms = Atoms::instance();
-    return (
-        atoms.canBond(atomicNumber,top,Atoms::Direction::Top)
-        && atoms.canBond(atomicNumber,right,Atoms::Direction::Right)
-        && atoms.canBond(atomicNumber,bottom,Atoms::Direction::Bottom)
-        && atoms.canBond(atomicNumber,left,Atoms::Direction::Left)
-        );
+    for (int i = 0;i < 4;i++)
+    {
+        if (!atoms.canBond(atomicNumber,atom(neighbor(position,i)),Atom::direction(i)))
+        {
+            return false;
+        }
+    }
+    return true;
 }
 
 bool Molecule::canRemoveAtom(const QPoint& position) const
@@ -117,20 +134,12 @@ bool Molecule::canRemoveAtom(const QPoint& position) const
             )
         {
             travelled.insert(pos);
-            travel({pos.x(),pos.y()+1});
-            travel({pos.x()+1,pos.y()});
-            travel({pos.x(),pos.y()-1});
-            travel({pos.x()-1,pos.y()});
+            for (int i = 0;i < 4;i++) travel(neighbor(pos,i));
         }
     };
-    const QList<QPoint> ss {
-        {position.x(),position.y()+1}
-        ,{position.x()+1,position.y()}
-        ,{position.x(),position.y()-1}
-        ,{position.x()-1,position.y()}
-    };
-    for (const auto& pos: ss)
+    for (int i = 0;i < 4;i++)
     {
+        auto pos = neighbor(position,i);
         if (_atoms.contains(pos))
         {
             travel(pos);
@@ -145,21 +154,69 @@ bool Molecule::removeAtom(const QPoint& position)
     if (!canRemoveAtom(position)) return false;
     auto i = _atoms.find(position);
     Q_ASSERT(i != _atoms.end());
-    //_molarMass -= Atoms::instance().get(i.value()).mass();
     _atoms.erase(i);
+    auto mi = _mappedAtoms.find(position);
+    Q_ASSERT(mi != _mappedAtoms.end());
+    _mappedAtoms.erase(mi);
     update();
     return true;
 }
 
 void Molecule::update()
 {
-    _molarMass = 0.0;
+    QByteArray sd;
+    QDataStream sdin(&sd,QIODeviceBase::WriteOnly);
+    int r = 0;
+    int g = 0;
+    int b = 0;
     _radius = 0.0;
-    for (auto i = _atoms.cbegin();i != _atoms.cend();i++)
+    _charge = 0;
+    _molarMass = 0.0;
+    _stability = _atoms.isEmpty() ? 0.0 : StabilityBase;
+    for (auto i = _mappedAtoms.cbegin();i != _mappedAtoms.cend();i++)
     {
-        _molarMass += Atoms::instance().get(i.value()).mass();
-        _radius = qMax(_radius,qreal(i.key().x()*i.key().x())+(i.key().y()*i.key().y()));
+        const auto& pos = i.key();
+        const auto& atom = Atoms::instance().get(i.value());
+        r += atom.color().red();
+        g += atom.color().green();
+        b += atom.color().blue();
+        sdin << pos.x() << pos.y() << atom.atomicNumber();
+        auto rs = qreal(pos.x()*pos.x())+(pos.y()*pos.y());
+        _stability -= StabilityNP*rs;
+        for (int i = 0;i < 4;i++)
+        {
+            if (_atoms.contains(neighbor(pos,i)))
+            {
+                if (atom.bond(Atom::direction(i)) == Atom::Bond::Covalent)
+                {
+                    _stability += StabilityMod;
+                }
+                else _stability -= StabilityMod;
+            }
+        }
+        _radius = qMax(_radius,rs);
+        _charge += atom.charge();
+        _molarMass += atom.mass();
     }
+    _color.setRgb(r/_atoms.size(),g/_atoms.size(),b/_atoms.size());
     _radius = sqrt(_radius);
-    _freezingPoint = FreezingPointA+(FreezingPointB*_molarMass);
+    QCryptographicHash sha256(QCryptographicHash::Sha256);
+    sha256.addData(sd);
+    _hash = sha256.result();
+}
+
+bool operator<(const QPoint& p0,const QPoint& p1)
+{
+    if (p0.x() == p1.x()) return p0.y() < p1.y();
+    else return p0.x() < p1.x();
+}
+
+bool operator==(const Molecule& m0, const Molecule& m1)
+{
+    return m0.atoms() == m1.atoms();
+}
+
+size_t qHash(const Molecule& key,size_t seed)
+{
+    return qHash(key.hash(),seed);
 }

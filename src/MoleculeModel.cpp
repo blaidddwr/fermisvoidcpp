@@ -1,9 +1,5 @@
 #include "MoleculeModel.h"
 
-MoleculeModel::MoleculeModel(QObject *parent):
-    QAbstractListModel(parent)
-{}
-
 QList<int> MoleculeModel::availableAtoms(const QPoint& position) const
 {
     return _molecule.availableAtoms(position);
@@ -21,9 +17,11 @@ bool MoleculeModel::addAtom(const QPoint& position,int atomicNumber)
         addLocation({position.x()-1,position.y()});
         auto i = index(row);
         emit dataChanged(i,i,{AtomicNumberRole});
-        emit freezingPointChanged(_molecule.freezingPoint());
+        emit colorChanged(_molecule.color());
         emit molarMassChanged(_molecule.molarMass());
+        emit chargeChanged(_molecule.charge());
         emit radiusChanged(_molecule.radius());
+        emit stabilityChanged(_molecule.stability());
         emit moleculeChanged(_molecule);
         return true;
     }
@@ -43,9 +41,11 @@ bool MoleculeModel::removeAtom(const QPoint& position)
         removeLocation(aps,{position.x()-1,position.y()});
         auto i = index(row);
         emit dataChanged(i,i,{AtomicNumberRole});
-        emit freezingPointChanged(_molecule.freezingPoint());
+        emit colorChanged(_molecule.color());
         emit molarMassChanged(_molecule.molarMass());
+        emit chargeChanged(_molecule.charge());
         emit radiusChanged(_molecule.radius());
+        emit stabilityChanged(_molecule.stability());
         emit moleculeChanged(_molecule);
         return true;
     }

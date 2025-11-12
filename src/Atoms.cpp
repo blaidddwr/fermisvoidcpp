@@ -12,24 +12,14 @@ Atoms::~Atoms()
     qDeleteAll(_atoms);
 }
 
-bool Atoms::canBond(int atomicNumber0,int atomicNumber1,Direction direction)
+bool Atoms::canBond(int atomicNumber0,int atomicNumber1,Atom::Direction direction)
 {
     if (atomicNumber1 == -1) return true;
     const auto& a0 = get(atomicNumber0);
     const auto& a1 = get(atomicNumber1);
-    switch (direction)
-    {
-    case Direction::Top:
-        return Atom::canBond(a0.topBond(),a1.bottomBond());
-    case Direction::Right:
-        return Atom::canBond(a0.rightBond(),a1.leftBond());
-    case Direction::Bottom:
-        return Atom::canBond(a0.bottomBond(),a1.topBond());
-    case Direction::Left:
-        return Atom::canBond(a0.leftBond(),a1.rightBond());
-    default:
-        return false;
-    }
+    int o = static_cast<int>(direction)+2;
+    if (o > 3) o -= 4;
+    return Atom::canBond(a0.bond(direction),a1.bond(static_cast<Atom::Direction>(o)));
 }
 
 const Atom& Atoms::get(int atomicNumber) const

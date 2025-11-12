@@ -32,8 +32,8 @@ ScenePage {
         {
             focus = true
             if (mouse.angleDelta.y < 0.0) cameraScene.setCameraTarget(
-                cameraScene.x+((center.x-mouse.x)/screenScale)
-                ,cameraScene.y+((mouse.y-center.y)/screenScale)
+                cameraScene.x+((mouse.x-center.x)/screenScale)
+                ,cameraScene.y+((center.y-mouse.y)/screenScale)
                 ,cameraScene.z*zStepSize
                 ,cameraDuration
                 )

@@ -32,10 +32,7 @@ private:
         float x;
         float y;
         Color atomColor;
-        quint32 topBond;
-        quint32 rightBond;
-        quint32 bottomBond;
-        quint32 leftBond;
+        quint32 bonds[4];
     };
     void initProgram();
     void initVertexArray();

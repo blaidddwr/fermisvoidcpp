@@ -55,9 +55,9 @@ QVariant AtomListModel::data(const QModelIndex& index,int role) const
     {
         const auto& atom = Atoms::instance().get(an);
         QString ret;
-        for (auto bond: {atom.topBond(),atom.rightBond(),atom.bottomBond(),atom.leftBond()})
+        for (int i = 0;i < 4;i++)
         {
-            switch (bond)
+            switch (atom.bond(Atom::direction(i)))
             {
             case Atom::Bond::Positive:
                 ret += "+";

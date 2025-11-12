@@ -3,10 +3,17 @@
 bool Atom::canBond(Bond b0,Bond b1)
 {
     return (
-        (b0 == Covalent && b1 == Covalent)
-        || (b0 == Positive && b1 == Negative)
-        || (b0 == Negative && b1 == Positive)
+        (b0 == Bond::Covalent && b1 == Bond::Covalent)
+        || (b0 == Bond::Positive && b1 == Bond::Negative)
+        || (b0 == Bond::Negative && b1 == Bond::Positive)
         );
+}
+
+Atom::Direction Atom::direction(int index)
+{
+    Q_ASSERT(index >= 0);
+    Q_ASSERT(index < 4);
+    return static_cast<Direction>(index);
 }
 
 Atom::Atom(
@@ -18,10 +25,7 @@ Atom::Atom(
     ,Bond bottomBond
     ,Bond leftBond
     ):
-    _topBond(topBond)
-    ,_rightBond(rightBond)
-    ,_bottomBond(bottomBond)
-    ,_leftBond(leftBond)
+    _bonds{topBond,rightBond,bottomBond,leftBond}
     ,_color(color)
     ,_atomicNumber(atomicNumber)
     ,_mass(mass)
@@ -29,12 +33,17 @@ Atom::Atom(
     Q_ASSERT(atomicNumber >= 1);
 }
 
+Atom::Bond Atom::bond(Direction d) const
+{
+    return _bonds[static_cast<int>(d)];
+}
+
 int Atom::charge() const
 {
-    return (
-        (_topBond == Covalent ? 0 : _topBond == Positive ? 1 : -1)
-        +(_rightBond == Covalent ? 0 : _rightBond == Positive ? 1 : -1)
-        +(_bottomBond == Covalent ? 0 : _bottomBond == Positive ? 1 : -1)
-        +(_leftBond == Covalent ? 0 : _leftBond == Positive ? 1 : -1)
-        );
+    int ret = 0;
+    for (int i = 0;i < 4;i++)
+    {
+        ret += _bonds[i] == Bond::Covalent ? 0 : _bonds[i] == Bond::Positive ? 1 : -1;
+    }
+    return ret;
 }
